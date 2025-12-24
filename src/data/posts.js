@@ -39,7 +39,7 @@ export const posts = [
     // 💡 將內容拆分為不同類型的區塊
     sections: [
       { type: 'text', value: "首先，這是我們在專案中拍攝的分析圖表：" },
-      { type: 'image', value: "/../../public/images/IMG_7299.jpeg", caption: "數據清洗流程圖" },
+      { type: 'image', value: "images/IMG_7299.jpeg", caption: "數據清洗流程圖" },
       { type: 'text', value: "接下來是動態的 Power BI 報告，你可以直接在下方操作：" },
       { 
         type: 'powerbi', 
