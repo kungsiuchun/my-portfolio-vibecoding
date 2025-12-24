@@ -42,7 +42,7 @@ const About = () => {
         <div className="flex flex-col md:flex-row items-center gap-12 relative z-10">
           <div className="w-48 h-48 md:w-64 md:h-64 rounded-[3rem] bg-slate-200 overflow-hidden shadow-inner flex-shrink-0">
             {/* 這裡可以放你的頭像 */}
-            <img src={`${import.meta.env.BASE_URL}src/images/SIUCHUN_HEADSHOT.jpeg`} alt="Profile" className="w-full h-full object-cover" />
+            <img src={`${import.meta.env.BASE_URL}/images/SIUCHUN_HEADSHOT.jpeg`} alt="Profile" className="w-full h-full object-cover" />
           </div>
           
           <div className="flex-1 text-center md:text-left">
