@@ -1,13 +1,26 @@
+import React, { useState } from 'react'; // 1. 引入 useState
 import { Link } from 'react-router-dom';
 import { Search } from 'lucide-react';
+import { posts } from '../data/posts';
 
 const BlogList = () => {
-  // 模擬文章資料
-  const allPosts = [
-    { id: 1, title: "如何打造簡約美感的前端介面", date: "2024.03.15", category: "Design", desc: "探討莫蘭迪色系與圓角設計在現代網頁中的應用..." },
-    { id: 2, title: "React 18 與 Vite 的完美結合", date: "2024.03.10", category: "Tech", desc: "為什麼現代前端開發者應該全面轉向 Vite？" },
-    { id: 3, title: "Tailwind CSS 最佳實踐", date: "2024.03.05", category: "Coding", desc: "如何保持 HTML 整潔並同時享受原子化 CSS 的便利。" },
-  ];
+  // 2. 建立 search 狀態
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // 3. 先進行排序 (最新日期在前)
+  const sortedPosts = [...posts].sort((a, b) => {
+    return new Date(b.date.replace(/\./g, '-')) - new Date(a.date.replace(/\./g, '-'));
+  });
+
+  // 4. 根據搜尋字串進行過濾
+  const filteredPosts = sortedPosts.filter(post => {
+    const title = post.title.toLowerCase();
+    const desc = post.desc.toLowerCase();
+    const query = searchQuery.toLowerCase();
+    
+    // 如果標題或簡介包含關鍵字，就顯示
+    return title.includes(query) || desc.includes(query);
+  });
 
   return (
     <div className="max-w-4xl mx-auto py-10">
@@ -19,37 +32,54 @@ const BlogList = () => {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-rose-400 transition-colors" size={20} />
           <input 
             type="text" 
-            placeholder="搜尋文章關鍵字..." 
+            placeholder="搜尋文章標題或內容..." 
             className="w-full pl-12 pr-4 py-4 bg-white border border-slate-100 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-rose-100 focus:border-rose-300 transition-all"
+            // 5. 綁定輸入事件
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+        
+        {/* 顯示搜尋結果數量 */}
+        {searchQuery && (
+          <p className="mt-4 text-sm text-slate-400">
+            找到 {filteredPosts.length} 篇關於「{searchQuery}」的文章
+          </p>
+        )}
       </div>
 
       <div className="space-y-8">
-        {allPosts.map(post => (
-          <article key={post.id} className="group relative bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl transition-soft">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="px-3 py-1 bg-sky-50 text-sky-500 text-xs font-bold rounded-full uppercase tracking-wider">
-                    {post.category}
-                  </span>
-                  <span className="text-slate-400 text-sm">{post.date}</span>
+        {/* 6. 使用過濾後的 filteredPosts 進行渲染 */}
+        {filteredPosts.length > 0 ? (
+          filteredPosts.map(post => (
+            <article key={post.id} className="group relative bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="px-3 py-1 bg-sky-50 text-sky-500 text-xs font-bold rounded-full uppercase tracking-wider">
+                      {post.category}
+                    </span>
+                    <span className="text-slate-400 text-sm">{post.date}</span>
+                  </div>
+                  <h2 className="text-2xl font-bold text-slate-800 group-hover:text-rose-400 transition-colors mb-3">
+                    <Link to={`/post/${post.id}`}>{post.title}</Link>
+                  </h2>
+                  <p className="text-slate-500 leading-relaxed">{post.desc}</p>
                 </div>
-                <h2 className="text-2xl font-bold text-slate-800 group-hover:text-rose-400 transition-colors mb-3">
-                  <Link to={`/post/${post.id}`}>{post.title}</Link>
-                </h2>
-                <p className="text-slate-500 leading-relaxed">{post.desc}</p>
+                <Link 
+                  to={`/post/${post.id}`}
+                  className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-50 text-slate-400 group-hover:bg-rose-400 group-hover:text-white transition-all flex-shrink-0"
+                >
+                  →
+                </Link>
               </div>
-              <Link 
-                to={`/post/${post.id}`}
-                className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-50 text-slate-400 group-hover:bg-rose-400 group-hover:text-white transition-all"
-              >
-                →
-              </Link>
-            </div>
-          </article>
-        ))}
+            </article>
+          ))
+        ) : (
+          <div className="text-center py-20 bg-slate-50 rounded-[2rem] border-2 border-dashed border-slate-200">
+            <p className="text-slate-400 italic">找不到相符的文章...</p>
+          </div>
+        )}
       </div>
     </div>
   );

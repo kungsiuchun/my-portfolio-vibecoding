@@ -1,11 +1,15 @@
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { posts } from '../data/posts'; // 引入資料
 
 const Home = () => {
-  const featuredPosts = [
-    { id: 1, title: "如何打造簡約美感的前端介面", date: "2024.03.15", category: "Design" },
-    { id: 2, title: "React 18 與 Vite 的完美結合", date: "2024.03.10", category: "Tech" },
-  ];
+  const latestPosts = [...posts]
+    .sort((a, b) => new Date(b.date.replace(/\./g, '-')) - new Date(a.date.replace(/\./g, '-')))
+    .slice(0, 2); // 只取最新的前兩篇作為精選
+  // const featuredPosts = [
+  //   { id: 1, title: "如何打造簡約美感的前端介面", date: "2024.03.15", category: "Design" },
+  //   { id: 2, title: "React 18 與 Vite 的完美結合", date: "2024.03.10", category: "Tech" },
+  // ];
 
   return (
     <div className="space-y-20">
@@ -29,7 +33,7 @@ const Home = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {featuredPosts.map(post => (
+          {latestPosts.map(post => (
             <Link key={post.id} to={`/post/${post.id}`}>
               <div className="group bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-soft border border-slate-50">
                 <span className="text-xs font-bold uppercase tracking-widest text-sky-400">{post.category}</span>
