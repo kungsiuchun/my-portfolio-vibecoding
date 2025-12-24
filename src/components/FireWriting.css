@@ -1,0 +1,87 @@
+.fire-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 3rem;
+  padding: 3rem;
+  margin-bottom: 3rem;
+  min-height: 250px;
+  position: relative;
+}
+
+.fire-svg {
+  width: 100%;
+  max-width: 500px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: 90px;
+  letter-spacing: 12px;
+}
+
+.text-path {
+  dominant-baseline: middle;
+}
+
+/* 靜態火藥路徑 */
+.powder-trail {
+  fill: none;
+  stroke: #1e293b;
+  stroke-width: 2;
+}
+
+.burning-fire {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 4;
+  stroke-linecap: round;
+  filter: url(#glow);
+}
+
+/* 💡 點火後的燃燒動畫 */
+.animate-burn {
+  stroke: #ff6a00;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: burn-path 4s forwards linear;
+}
+
+@keyframes burn-path {
+  0% {
+    stroke-dashoffset: 1000;
+    stroke: #ffcc00;
+  }
+  80% {
+    stroke: #ff4500;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    stroke: #ff2200;
+  }
+}
+
+/* 💡 最後到達末尾時的閃爍效果 */
+.final-flash {
+  animation: flash-glow 0.8s ease-out;
+  fill: rgba(255, 69, 0, 0.2); /* 燒完後字體中心微紅 */
+}
+
+@keyframes flash-glow {
+  0% { filter: brightness(1) blur(0px); stroke-width: 4; }
+  50% { filter: brightness(5) blur(5px); stroke-width: 10; stroke: #fff; }
+  100% { filter: brightness(2) blur(2px); stroke-width: 4; stroke: #ff2200; }
+}
+
+.hover-hint {
+  fill: #475569;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}

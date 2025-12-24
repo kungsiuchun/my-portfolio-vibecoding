@@ -1,83 +1,92 @@
-import React, { useState } from 'react'; // 1. 引入 useState
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search } from 'lucide-react';
+import { Search, ArrowRight } from 'lucide-react'; // 引入 ArrowRight 替代純文字箭頭
 import { posts } from '../data/posts';
 
 const BlogList = () => {
-  // 2. 建立 search 狀態
   const [searchQuery, setSearchQuery] = useState("");
 
-  // 3. 先進行排序 (最新日期在前)
   const sortedPosts = [...posts].sort((a, b) => {
     return new Date(b.date.replace(/\./g, '-')) - new Date(a.date.replace(/\./g, '-'));
   });
 
-  // 4. 根據搜尋字串進行過濾
   const filteredPosts = sortedPosts.filter(post => {
     const title = post.title.toLowerCase();
     const desc = post.desc.toLowerCase();
     const query = searchQuery.toLowerCase();
-    
-    // 如果標題或簡介包含關鍵字，就顯示
     return title.includes(query) || desc.includes(query);
   });
 
   return (
-    <div className="max-w-4xl mx-auto py-10">
-      <div className="mb-12">
-        <h1 className="text-4xl font-extrabold text-slate-800 mb-6">所有文章</h1>
+    <div className="max-w-4xl mx-auto py-10 px-6 transition-colors duration-500">
+      <div className="mb-16">
+        <h1 className="text-4xl md:text-5xl font-black text-slate-800 dark:text-white mb-8 tracking-tight">
+          所有文章
+        </h1>
         
-        {/* 搜尋框 */}
+        {/* 搜尋框: 加上 dark 樣式 */}
         <div className="relative group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-rose-400 transition-colors" size={20} />
+          <Search 
+            className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-rose-400 transition-colors" 
+            size={20} 
+          />
           <input 
             type="text" 
             placeholder="搜尋文章標題或內容..." 
-            className="w-full pl-12 pr-4 py-4 bg-white border border-slate-100 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-rose-100 focus:border-rose-300 transition-all"
-            // 5. 綁定輸入事件
+            className="w-full pl-14 pr-6 py-5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[2rem] shadow-sm dark:shadow-none text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-4 focus:ring-rose-100 dark:focus:ring-rose-900/20 focus:border-rose-300 transition-all placeholder:text-slate-300 dark:placeholder:text-slate-600"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         
-        {/* 顯示搜尋結果數量 */}
         {searchQuery && (
-          <p className="mt-4 text-sm text-slate-400">
-            找到 {filteredPosts.length} 篇關於「{searchQuery}」的文章
+          <p className="mt-6 text-sm text-slate-400 dark:text-slate-500 font-medium">
+            找到 {filteredPosts.length} 篇關於「<span className="text-rose-400">{searchQuery}</span>」的文章
           </p>
         )}
       </div>
 
-      <div className="space-y-8">
-        {/* 6. 使用過濾後的 filteredPosts 進行渲染 */}
+      <div className="space-y-10">
         {filteredPosts.length > 0 ? (
           filteredPosts.map(post => (
-            <article key={post.id} className="group relative bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            /* 文章卡片: 增加深色模式背景與邊框 */
+            <article 
+              key={post.id} 
+              className="group relative bg-white dark:bg-slate-900 p-8 md:p-10 rounded-[2.5rem] border border-slate-50 dark:border-slate-800 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-500"
+            >
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="px-3 py-1 bg-sky-50 text-sky-500 text-xs font-bold rounded-full uppercase tracking-wider">
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="px-4 py-1 bg-sky-50 dark:bg-sky-500/10 text-sky-500 dark:text-sky-400 text-xs font-black rounded-full uppercase tracking-widest">
                       {post.category}
                     </span>
-                    <span className="text-slate-400 text-sm">{post.date}</span>
+                    <span className="text-slate-400 dark:text-slate-500 text-sm font-medium">{post.date}</span>
                   </div>
-                  <h2 className="text-2xl font-bold text-slate-800 group-hover:text-rose-400 transition-colors mb-3">
+                  
+                  <h2 className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-white group-hover:text-rose-400 transition-colors mb-4 leading-tight">
                     <Link to={`/post/${post.id}`}>{post.title}</Link>
                   </h2>
-                  <p className="text-slate-500 leading-relaxed">{post.desc}</p>
+                  <p className="text-slate-500 dark:text-slate-400 leading-relaxed text-lg font-light">
+                    {post.desc}
+                  </p>
                 </div>
+
+                {/* 右側箭頭按鈕 */}
                 <Link 
                   to={`/post/${post.id}`}
-                  className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-50 text-slate-400 group-hover:bg-rose-400 group-hover:text-white transition-all flex-shrink-0"
+                  className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500 group-hover:bg-rose-400 group-hover:text-white group-hover:rotate-[-45deg] transition-all duration-500 flex-shrink-0"
                 >
-                  →
+                  <ArrowRight size={24} />
                 </Link>
               </div>
             </article>
           ))
         ) : (
-          <div className="text-center py-20 bg-slate-50 rounded-[2rem] border-2 border-dashed border-slate-200">
-            <p className="text-slate-400 italic">找不到相符的文章...</p>
+          /* 找不到內容時的空狀態 */
+          <div className="text-center py-24 bg-slate-50/50 dark:bg-slate-900/50 rounded-[3rem] border-2 border-dashed border-slate-200 dark:border-slate-800">
+            <p className="text-slate-400 dark:text-slate-600 italic text-lg font-light">
+              找不到相符的文章，試試其他關鍵字吧！
+            </p>
           </div>
         )}
       </div>
