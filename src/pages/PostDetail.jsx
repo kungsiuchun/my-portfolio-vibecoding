@@ -1,18 +1,50 @@
 // src/pages/PostDetail.jsx
+import { useState } from 'react'; // 💡 引入 useState
 import { useParams, useNavigate } from 'react-router-dom';
 import { posts } from '../data/posts';
-import { ArrowLeft, Maximize2 } from 'lucide-react';
+import { ArrowLeft, Maximize2, FileText, X } from 'lucide-react'; // 💡 引入新圖示
+import ReactMarkdown from 'react-markdown';
+import CommentSystem from '../components/CommentSystem'; // 引入組件
 
 const PostDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // 💡 控制抽屜狀態
+  const [activeDoc, setActiveDoc] = useState(""); // 💡 儲存當前顯示的文件內容
+
   const post = posts.find(p => p.id === parseInt(id));
 
   if (!post) return <div className="text-center py-20 dark:text-white">文章不存在</div>;
 
   return (
     <div className="w-full max-w-[95vw] mx-auto px-2 md:px-6 transition-colors duration-500">
-      
+
+      {/* 💡 技術文件側邊抽屜 */}
+      <div className={`fixed inset-y-0 right-0 w-full md:w-[450px] bg-white/80 dark:bg-slate-900/90 backdrop-blur-xl z-[100] shadow-2xl transform transition-transform duration-500 ease-in-out border-l border-slate-200 dark:border-slate-800 ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        
+        <div className="h-full flex flex-col p-8">
+          {/* 標題區域：固定在上方 */}
+          <div className="flex items-center justify-between mb-8 flex-shrink-0">
+            <h3 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+              <FileText className="text-rose-400" /> 技術文件說明
+            </h3>
+            <button onClick={() => setIsDrawerOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+              <X className="dark:text-white" size={24} />
+            </button>
+          </div>
+
+          {/* 💡 內容區域：優化 Dark Mode 顏色與排版 */}
+          <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar">
+            <div className="prose prose-slate dark:prose-invert max-w-none text-left dark:text-white">
+              <ReactMarkdown>
+                {activeDoc}
+              </ReactMarkdown>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       {/* 返回列表按鈕 */}
       <div className="max-w-4xl mx-auto mb-6">
         <button 
@@ -56,6 +88,20 @@ const PostDetail = () => {
             if (section.type === 'powerbi') {
               return (
                 <div key={index} className="w-full px-4 md:px-10 my-16">
+                  
+                  {/* 💡 增加技術文件切換按鈕 */}
+                  <div className="max-w-8xl mx-auto mb-4 flex justify-end">
+                    <button 
+                      onClick={() => {
+                        setActiveDoc(section.doc || "尚未提供技術文件。");
+                        setIsDrawerOpen(true);
+                      }}
+                      className="flex items-center gap-2 px-6 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl hover:bg-rose-400 dark:hover:bg-rose-400 transition-all shadow-lg font-bold text-sm"
+                    >
+                      <FileText size={18} /> 查看技術細節
+                    </button>
+                  </div>
+
                   {/* 外層容器增加 dark:ring-slate-700 和陰影調整 */}
                   <div className="group relative w-full aspect-video md:aspect-[21/9] rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50 dark:bg-slate-800">
                     <iframe
@@ -103,9 +149,22 @@ const PostDetail = () => {
           })}
         </div>
       </article>
-      
+
+      {/* 💡 留言系統區塊 */}
+      <div className="mt-6 max-w-4xl mx-auto px-6 mb-20">
+        <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-8">
+          💬 交流與討論
+        </h3>
+        <CommentSystem />
+      </div>
+
       {/* 底部填充空間 */}
       <div className="h-20"></div>
+
+      {/* 💡 點擊背景關閉抽屜的遮罩 */}
+      {isDrawerOpen && (
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[90] transition-opacity" onClick={() => setIsDrawerOpen(false)}></div>
+      )}
     </div>
   );
 };

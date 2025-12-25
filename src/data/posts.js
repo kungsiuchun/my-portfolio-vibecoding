@@ -43,7 +43,16 @@ export const posts = [
       { type: 'text', value: "接下來是動態的 Power BI 報告，你可以直接在下方操作：" },
       { 
         type: 'powerbi', 
-        value: "https://app.powerbi.com/reportEmbed?reportId=d983e051-913f-4e5a-9f7b-437b7bcf55bf&autoAuth=true&ctid=60e0c9ef-8288-4ed8-9f76-989307f391fd&actionBarEnabled=true" // 👈 貼上你的 Power BI 公開嵌入連結
+        value: "https://app.powerbi.com/reportEmbed?reportId=d983e051-913f-4e5a-9f7b-437b7bcf55bf&autoAuth=true&ctid=60e0c9ef-8288-4ed8-9f76-989307f391fd&actionBarEnabled=true", // 👈 貼上你的 Power BI 公開嵌入連結
+      // 💡 加入 doc 屬性
+        doc: 
+`
+### 技術細節說明
+1. **數據來源**: 使用 SQL Server 進行 ETL，透過 Power Query 進行清洗。
+2. **DAX 邏輯**: 使用了 CALCULATE 與 FILTER 函數計算年度同比 (YoY%)。
+3. **優化**: 建立了星狀結構 (Star Schema) 以提高運算效能。
+4. **設計感**: 採用極簡 UI 風格，並適配了深色模式。
+`
       },
     ]
   }

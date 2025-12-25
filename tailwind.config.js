@@ -17,5 +17,7 @@ export default {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'), // 👈 加入這一行
+  ],
 }
