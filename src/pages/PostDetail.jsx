@@ -151,11 +151,21 @@ const PostDetail = () => {
       </article>
 
       {/* 💡 留言系統區塊 */}
-      <div className="mt-6 max-w-4xl mx-auto px-6 mb-20">
-        <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-8">
-          💬 交流與討論
-        </h3>
-        <CommentSystem />
+      <div className="max-w-4xl mx-auto px-6 mb-20 mt-16"> 
+        {/* 這裡增加了 mt-16 作為與文章之間的 Margin */}
+        
+        <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 md:p-12 shadow-xl border border-slate-100 dark:border-slate-800 transition-all duration-500">
+          {/* 這裡使用了與文章卡片類似的 shadow-xl 和 rounded 樣式 */}
+          
+          <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-10 flex items-center gap-3">
+            <span className="dark:-500/20 p-2 rounded-lg text-xl">💬</span>
+            交流與討論
+          </h3>
+          
+          <div className="min-h-[200px]">
+            <CommentSystem />
+          </div>
+        </div>
       </div>
 
       {/* 底部填充空間 */}
