@@ -29,14 +29,17 @@ console.log("🚀 Prepared routes for react-snap:", allRoutes);
 run({
   source: "dist",
   include: allRoutes,
-  // 💡 關鍵：告知 react-snap 你的基礎路徑
-  publicPath: "/my-portfolio-vibecoding/", 
-  delay: 3000,
-  // 先移除 waitFor，我們改用 delay 來排查問題
-  // waitFor: '.article-content-loaded', 
+  publicPath: "/my-portfolio-vibecoding/",
+  delay: 5000, 
   puppeteerArgs: [
     "--no-sandbox",
     "--disable-setuid-sandbox",
     "--disable-dev-shm-usage"
   ]
-})
+}).then(() => {
+  console.log("✅ All pages rendered successfully!");
+  process.exit(0); // 確保成功結束
+}).catch((err) => {
+  console.error("❌ react-snap failed:", err);
+  process.exit(1); // 錯誤時報錯
+});
