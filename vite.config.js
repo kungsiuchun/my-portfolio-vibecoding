@@ -3,6 +3,11 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/my-portfolio-vibecoding/",
   plugins: [react()],
-  base: '/my-portfolio-vibecoding/', // 部署到 GitHub Pages 時，這裡填寫你的倉庫名稱
+  build: {
+    target: 'es2015', 
+    // 💡 將 'terser' 改為 'esbuild' 或直接刪除這一行（預設就是 esbuild）
+    minify: 'esbuild', 
+  }
 })

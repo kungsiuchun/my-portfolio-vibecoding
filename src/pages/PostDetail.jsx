@@ -52,6 +52,12 @@ const PostDetail = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-6 transition-colors duration-500">
+      <SEO 
+        title={post.title} 
+        description={post.desc} 
+        image={post.coverImage} 
+        article={true}
+      />
 
   {/* ✅ 確保文字在 div 裡面，並檢查 z-index */}
   <div 
