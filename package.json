@@ -8,12 +8,13 @@
     "build": "vite build && cp dist/index.html dist/404.html",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "postbuild": "node scripts/render.js",
+    "postbuild": "node scripts/render.cjs",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@giscus/react": "^3.1.0",
     "lucide-react": "^0.284.0",
+    "puppeteer": "^24.34.0",
     "react": "^18.2.0",
     "react-confetti": "^6.4.0",
     "react-dom": "^18.2.0",

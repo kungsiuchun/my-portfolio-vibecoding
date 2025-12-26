@@ -30,7 +30,11 @@ run({
   source: "dist",
   include: allRoutes,
   // 可以在這裡加入其他配置
-  puppeteerArgs: ["--no-sandbox", "--disable-setuid-sandbox"]
+  puppeteerArgs: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage"
+  ],
 }).catch((err) => {
   console.error("❌ react-snap failed:", err);
   process.exit(1);
