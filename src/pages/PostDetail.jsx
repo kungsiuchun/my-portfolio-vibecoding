@@ -26,25 +26,20 @@ const PostDetail = () => {
   }, [showToast]);
 
   const handleShare = async () => {
-    console.log("Share button clicked"); // 確保按鈕有反應
-
     const shareData = {
       title: post.title,
       text: post.desc,
       url: window.location.href,
     };
 
-  if (navigator.share) {
+    if (navigator.share) {
       try {
         await navigator.share(shareData);
-        // ✅ 即使是原生分享，也可以給個小提示（選填）
-        // setShowToast(true); 
       } catch (err) {
         console.log('Share cancelled');
       }
     } else {
       await navigator.clipboard.writeText(window.location.href);
-      // ✅ 只有在「複製連結」模式下，Toast 才真正必要
       setShowToast(true);
     }
   };
@@ -60,18 +55,17 @@ const PostDetail = () => {
         article={true}
       />
 
-  {/* ✅ 確保文字在 div 裡面，並檢查 z-index */}
-  <div 
-    className={`fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] transition-all duration-500 transform ${
-      showToast ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'
-    }`}
-  >
-    <div className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-800 dark:border-slate-200">
-      <div className="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></div>
-      {/* 💡 這裡一定要有文字 */}
-      <span className="text-sm font-bold">Link copied to clipboard!</span>
-    </div>
-  </div>
+      {/* ✅ Corrected Toast Component */}
+      <div 
+        className={`fixed bottom-10 left-1/2 -translate-x-1/2 z-[110] transition-all duration-500 transform ${
+          showToast ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'
+        }`}
+      >
+        <div className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-800 dark:border-slate-200">
+          <div className="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></div>
+          <span className="text-sm font-bold">Link copied to clipboard!</span>
+        </div>
+      </div>
 
       {/* Documentation Drawer */}
       <div className={`fixed inset-y-0 right-0 w-full md:w-[450px] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl z-[100] shadow-2xl transform transition-transform duration-500 ease-in-out border-l border-slate-200 dark:border-slate-800 ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
