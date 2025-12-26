@@ -14,7 +14,7 @@ const Navbar = () => (
     <SeasonalEffect /> {/* 💡 放在這裡，全站生效 */}
     <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
       <Link to="/" className="text-xl font-bold bg-gradient-to-r from-rose-400 to-sky-400 bg-clip-text text-transparent">
-        SiuChunKung.Portfolio
+        SiuChun.Portfolio
       </Link>
       
       <div className="flex items-center gap-8">
