@@ -49,13 +49,13 @@ const About = () => {
             {/* 2. 文字: 加上 dark:text-white */}
             <h1 className="text-5xl md:text-7xl font-black text-slate-800 dark:text-white mb-6">I'm Vibe.</h1>
             <p className="text-xl md:text-2xl text-slate-500 dark:text-slate-400 font-light leading-relaxed mb-8">
-              一名專注於 <span className="text-rose-400 font-medium">數據視覺化</span> 與 
-              <span className="text-sky-400 font-medium"> 前端工程 </span> 的開發者。
+              A developer specializing in <span className="text-rose-400 font-medium">Data Visualization</span> and 
+              <span className="text-sky-400 font-medium"> Frontend Engineering</span>.
             </p>
             
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
               <a href="mailto:kungsiuchun0@gmail.com" className="flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-white dark:text-slate-900 text-white rounded-full hover:bg-rose-400 dark:hover:bg-rose-400 transition-colors shadow-lg font-bold">
-                <Mail size={18} /> 聯繫我
+                <Mail size={18} /> Contact Me
               </a>
               <div className="flex gap-3">
                 <a href="https://github.com/kungsiuchun" className="p-3 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"><Github size={20} /></a>
@@ -70,7 +70,7 @@ const About = () => {
       <section className="mb-20">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-black text-slate-800 dark:text-white">Skill Ecosystem</h2>
-          <p className="text-slate-400 dark:text-slate-500 mt-4 font-medium">跨領域的技術整合能力</p>
+          <p className="text-slate-400 dark:text-slate-500 mt-4 font-medium">Multi-disciplinary technical expertise</p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -109,12 +109,18 @@ const About = () => {
       {/* 4. Core Philosophy: 這裡原本就是深色，但在深色模式下可以微調邊框 */}
       <section className="bg-slate-900 dark:bg-black text-white rounded-[3.5rem] p-12 md:p-20 text-center relative overflow-hidden border border-transparent dark:border-slate-800">
         <div className="relative z-10 max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8 italic">"數據如果不美觀，它就無法被理解；如果無法被理解，它就失去了解決問題的能力。"</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 italic">"If data is not beautiful, it cannot be understood; if it cannot be understood, it loses the power to solve problems."</h2>
+          {/* <h2 className="text-3xl md:text-4xl font-bold mb-8 italic">"數據如果不美觀，它就無法被理解；如果無法被理解，它就失去了解決問題的能力。"</h2> */}
           <div className="w-12 h-1 bg-rose-400 mx-auto rounded-full mb-8"></div>
           <p className="text-slate-400 text-lg font-light leading-loose">
+            In my development journey, I put user experience at the heart of everything I build. 
+            My goal is not just to create accurate reports, but to craft visual art that allows 
+            decision-makers to capture insights at a glance.
+          </p>
+          {/* <p className="text-slate-400 text-lg font-light leading-loose">
             在 Power BI 的開發過程中，我始終堅持以用戶體驗為中心。我的目標不僅是做出正確的報表，
             而是做出能讓決策者一眼看出洞察（Insight）的視覺化藝術。
-          </p>
+          </p> */}
         </div>
       </section>
     </div>

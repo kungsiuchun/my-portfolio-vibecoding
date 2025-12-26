@@ -16,19 +16,23 @@ const Home = () => {
       <section className="px-6 text-center">
         <FireWriting text="VIBE" />
         <h1 className="text-5xl md:text-6xl font-extrabold text-slate-800 dark:text-white mb-8 tracking-tight mt-12">
-          寫作，是為了更好的 <span className="text-sky-400">思考</span>。
+          {/* Updated to English: "Writing is for better thinking" */}
+          Writing to <span className="text-sky-400">Think</span> Better.
         </h1>
         <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed font-light">
-          這裡是我的數位花園。我分享關於 React 前端開發、UI/UX 設計以及那些在程式碼之外的生活瑣事。
+          {/* Updated to English: Description of your digital garden */}
+          Welcome to my digital garden. I share insights on React development, UI/UX design, and my journey through the world of code.
         </p>
       </section>
 
       {/* Featured Posts Section */}
       <section className="px-6">
         <div className="flex items-center justify-between mb-12">
-          <h2 className="text-3xl font-bold text-slate-800 dark:text-white tracking-tight">精選文章</h2>
+          {/* Updated to English: "Featured Posts" */}
+          <h2 className="text-3xl font-bold text-slate-800 dark:text-white tracking-tight">Featured Posts</h2>
           <Link to="/blog" className="text-rose-400 hover:text-rose-500 font-semibold flex items-center gap-1 group">
-            查看全部 <span className="group-hover:translate-x-1 transition-transform">→</span>
+            {/* Updated to English: "View All" */}
+            View All <span className="group-hover:translate-x-1 transition-transform">→</span>
           </Link>
         </div>
 
@@ -59,7 +63,8 @@ const Home = () => {
                   to={`/post/${post.id}`}
                   className="text-slate-800 dark:text-slate-200 font-bold inline-flex items-center gap-2 group-hover:gap-4 transition-all"
                 >
-                  閱讀更多 <ArrowRight size={20} className="text-rose-400" />
+                  {/* Updated to English: "Read More" */}
+                  Read More <ArrowRight size={20} className="text-rose-400" />
                 </Link>
               </div>
             </article>

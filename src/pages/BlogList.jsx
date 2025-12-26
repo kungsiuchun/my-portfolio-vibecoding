@@ -21,7 +21,7 @@ const BlogList = () => {
     <div className="max-w-4xl mx-auto py-10 px-6 transition-colors duration-500">
       <div className="mb-16">
         <h1 className="text-4xl md:text-5xl font-black text-slate-800 dark:text-white mb-8 tracking-tight">
-          所有文章
+        All Posts
         </h1>
         
         {/* 搜尋框: 加上 dark 樣式 */}
@@ -32,7 +32,7 @@ const BlogList = () => {
           />
           <input 
             type="text" 
-            placeholder="搜尋文章標題或內容..." 
+            placeholder="Search posts or content..." 
             className="w-full pl-14 pr-6 py-5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[2rem] shadow-sm dark:shadow-none text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-4 focus:ring-rose-100 dark:focus:ring-rose-900/20 focus:border-rose-300 transition-all placeholder:text-slate-300 dark:placeholder:text-slate-600"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -41,7 +41,7 @@ const BlogList = () => {
         
         {searchQuery && (
           <p className="mt-6 text-sm text-slate-400 dark:text-slate-500 font-medium">
-            找到 {filteredPosts.length} 篇關於「<span className="text-rose-400">{searchQuery}</span>」的文章
+            Found {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'} for "<span className="text-rose-400">{searchQuery}</span>"
           </p>
         )}
       </div>
@@ -85,7 +85,7 @@ const BlogList = () => {
           /* 找不到內容時的空狀態 */
           <div className="text-center py-24 bg-slate-50/50 dark:bg-slate-900/50 rounded-[3rem] border-2 border-dashed border-slate-200 dark:border-slate-800">
             <p className="text-slate-400 dark:text-slate-600 italic text-lg font-light">
-              找不到相符的文章，試試其他關鍵字吧！
+              No posts found. Try another keyword!
             </p>
           </div>
         )}

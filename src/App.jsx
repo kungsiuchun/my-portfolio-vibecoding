@@ -19,9 +19,9 @@ const Navbar = () => (
       
       <div className="flex items-center gap-8">
         <div className="flex gap-8 text-sm font-medium text-slate-600 dark:text-slate-300">
-          <Link to="/" className="hover:text-rose-400 transition-soft">首頁</Link>
-          <Link to="/blog" className="hover:text-rose-400 transition-soft">文章</Link>
-          <Link to="/about" className="hover:text-rose-400 transition-soft">關於我</Link>
+          <Link to="/" className="hover:text-rose-400 transition-soft">Home</Link>
+          <Link to="/blog" className="hover:text-rose-400 transition-soft">Blog</Link>
+          <Link to="/about" className="hover:text-rose-400 transition-soft">About</Link>
         </div>
         
         {/* 💡 加入主題切換按鈕 */}

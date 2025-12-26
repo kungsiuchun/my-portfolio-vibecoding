@@ -1,82 +1,116 @@
 // src/pages/PostDetail.jsx
-import { useState } from 'react'; // 💡 引入 useState
+import { useState, useEffect } from 'react'; // ✅ Fix: Added useEffect
 import { useParams, useNavigate } from 'react-router-dom';
 import { posts } from '../data/posts';
-import { ArrowLeft, Maximize2, FileText, X } from 'lucide-react'; // 💡 引入新圖示
+import { ArrowLeft, Maximize2, FileText, X, Share2 } from 'lucide-react'; 
 import ReactMarkdown from 'react-markdown';
-import CommentSystem from '../components/CommentSystem'; // 引入組件
+import CommentSystem from '../components/CommentSystem';
+import SEO from '../components/SEO';
 
 const PostDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // 💡 控制抽屜狀態
-  const [activeDoc, setActiveDoc] = useState(""); // 💡 儲存當前顯示的文件內容
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [activeDoc, setActiveDoc] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
-  const post = posts.find(p => p.id === parseInt(id));
+  // ✅ Use loose comparison or string conversion to avoid type mismatch
+  const post = posts.find(p => p.id.toString() === id);
 
-  if (!post) return <div className="text-center py-20 dark:text-white">文章不存在</div>;
+  // ✅ Toast auto-close logic
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => setShowToast(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
+
+  const handleShare = async () => {
+    const shareData = {
+      title: post.title,
+      text: post.desc,
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log('Share cancelled');
+      }
+    } else {
+      await navigator.clipboard.writeText(window.location.href);
+      setShowToast(true);
+    }
+  };
+
+  if (!post) return <div className="text-center py-20 dark:text-white">Post not found</div>;
 
   return (
-    <div className="w-full max-w-[95vw] mx-auto px-2 md:px-6 transition-colors duration-500">
+    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 transition-colors duration-500">
+      <SEO 
+        title={post.title} 
+        description={post.desc} 
+        image={post.coverImage} 
+        article={true}
+      />
 
-      {/* 💡 技術文件側邊抽屜 */}
-      <div className={`fixed inset-y-0 right-0 w-full md:w-[450px] bg-white/80 dark:bg-slate-900/90 backdrop-blur-xl z-[100] shadow-2xl transform transition-transform duration-500 ease-in-out border-l border-slate-200 dark:border-slate-800 ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        
+      {/* ✅ Corrected Toast Component */}
+      <div 
+        className={`fixed bottom-10 left-1/2 -translate-x-1/2 z-[110] transition-all duration-500 transform ${
+          showToast ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'
+        }`}
+      >
+        <div className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-800 dark:border-slate-200">
+          <div className="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></div>
+          <span className="text-sm font-bold">Link copied to clipboard!</span>
+        </div>
+      </div>
+
+      {/* Documentation Drawer */}
+      <div className={`fixed inset-y-0 right-0 w-full md:w-[450px] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl z-[100] shadow-2xl transform transition-transform duration-500 ease-in-out border-l border-slate-200 dark:border-slate-800 ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="h-full flex flex-col p-8">
-          {/* 標題區域：固定在上方 */}
           <div className="flex items-center justify-between mb-8 flex-shrink-0">
             <h3 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-              <FileText className="text-rose-400" /> 技術文件說明
+              <FileText className="text-rose-400" /> Documentation
             </h3>
             <button onClick={() => setIsDrawerOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
               <X className="dark:text-white" size={24} />
             </button>
           </div>
-
-          {/* 💡 內容區域：優化 Dark Mode 顏色與排版 */}
-          <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar">
-            <div className="prose prose-slate dark:prose-invert max-w-none text-left dark:text-white">
-              <ReactMarkdown>
-                {activeDoc}
-              </ReactMarkdown>
-            </div>
+          <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar prose prose-slate dark:prose-invert">
+            <ReactMarkdown>{activeDoc}</ReactMarkdown>
           </div>
-
         </div>
       </div>
 
-      {/* 返回列表按鈕 */}
-      <div className="max-w-4xl mx-auto mb-6">
+      {/* Header Actions */}
+      <div className="mb-6 mt-6">
         <button 
           onClick={() => navigate(-1)} 
-          className="flex items-center gap-2 text-slate-400 hover:text-rose-400 dark:hover:text-rose-300 transition-all font-medium"
+          className="flex items-center gap-2 text-slate-400 hover:text-rose-400 transition-all font-medium"
         >
-          <ArrowLeft size={20} /> 返回列表
+          <ArrowLeft size={20} /> Back to List
         </button>
       </div>
 
-      {/* 文章主體卡片: 加上 dark:bg-slate-900 和 dark:border-slate-800 */}
-      <article className="bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden pb-20 transition-all duration-500">
-        
-        {/* 標題區域 */}
-        <header className="pt-16 pb-12 px-6 text-center max-w-4xl mx-auto">
-          <span className="px-4 py-1.5 bg-rose-50 dark:bg-rose-500/10 text-rose-400 rounded-full text-xs font-black uppercase tracking-[0.2em]">
+      {/* Main Article */}
+      <article className="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[4rem] shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden pb-20">
+        <header className="pt-20 pb-12 px-6 text-center max-w-4xl mx-auto">
+          <span className="px-4 py-1.5 bg-rose-50 dark:bg-rose-500/10 text-rose-400 rounded-full text-xs font-black uppercase tracking-widest">
             {post.category}
           </span>
-          <h1 className="text-4xl md:text-6xl font-black text-slate-800 dark:text-white mt-8 mb-6 leading-[1.1] tracking-tight">
+          <h1 className="text-4xl md:text-6xl font-black text-slate-800 dark:text-white mt-8 mb-6 leading-tight">
             {post.title}
           </h1>
-          <p className="text-slate-400 dark:text-slate-500 text-lg font-medium">{post.date}</p>
+          <p className="text-slate-400 dark:text-slate-500 text-lg">{post.date}</p>
         </header>
 
         <div className="flex flex-col items-center w-full">
           {post.sections.map((section, index) => {
-            
-            // --- 文字區塊 ---
             if (section.type === 'text') {
               return (
                 <div key={index} className="w-full max-w-3xl px-6 my-6">
-                  {/* 文字在深色模式下使用 slate-300，避免純白過於刺眼 */}
                   <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-xl md:text-2xl font-light">
                     {section.value}
                   </p>
@@ -84,114 +118,74 @@ const PostDetail = () => {
               );
             }
             
-            // --- Power BI 區塊 ---
             if (section.type === 'powerbi') {
               return (
                 <div key={index} className="w-full px-4 md:px-10 my-16">
-                  
-                  {/* 💡 增加技術文件切換按鈕 */}
-                  <div className="max-w-8xl mx-auto mb-4 flex justify-end">
+                  <div className="max-w-7xl mx-auto mb-4 flex justify-end">
                     <button 
                       onClick={() => {
-                        setActiveDoc(section.doc || "尚未提供技術文件。");
+                        setActiveDoc(section.doc || "Technical documentation not available yet.");
                         setIsDrawerOpen(true);
                       }}
                       className="flex items-center gap-2 px-6 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl hover:bg-rose-400 dark:hover:bg-rose-400 transition-all shadow-lg font-bold text-sm"
                     >
-                      <FileText size={18} /> 查看技術細節
+                      <FileText size={18} /> View Technical Details
                     </button>
                   </div>
-
-                  {/* 外層容器增加 dark:ring-slate-700 和陰影調整 */}
-                  <div className="group relative w-full aspect-video md:aspect-[21/9] rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50 dark:bg-slate-800">
+                  <div className="relative w-full aspect-video md:aspect-[21/9] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50 dark:bg-slate-800">
                     <iframe
                       title="Power BI Dashboard"
                       className="absolute top-0 left-0 w-full h-full"
                       src={section.value}
-                      frameBorder="0"
                       allowFullScreen={true}
                     ></iframe>
-                    
-                    {/* 右上角提示 */}
-                    <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                       <span className="flex items-center gap-2 bg-black/50 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm">
-                         <Maximize2 size={16} /> 可在 Power BI 工具欄點擊全螢幕
-                       </span>
-                    </div>
                   </div>
                 </div>
               );
             }
 
-            // --- 圖片區塊 ---
             if (section.type === 'image') {
-              // 處理圖片路徑適配 (之前討論過的 Base URL)
               const imgSrc = section.value.startsWith('http') 
                 ? section.value 
                 : `${import.meta.env.BASE_URL}${section.value.replace(/^\//, '')}`;
 
               return (
-                <div key={index} className="w-full max-w-6xl px-6 my-12">
-                  <img 
-                    src={imgSrc} 
-                    className="w-full rounded-[2.5rem] shadow-xl dark:shadow-rose-900/10 border border-transparent dark:border-slate-800" 
-                    alt={section.caption} 
-                  />
-                  {section.caption && (
-                    <p className="text-center text-slate-400 dark:text-slate-500 mt-6 italic">
-                      {section.caption}
-                    </p>
-                  )}
+                <div key={index} className="w-full max-w-5xl px-6 my-12">
+                  <img src={imgSrc} className="w-full rounded-[2.5rem] shadow-xl border border-transparent dark:border-slate-800" alt={section.caption} />
+                  {section.caption && <p className="text-center text-slate-400 mt-6 italic">{section.caption}</p>}
                 </div>
               );
             }
             return null;
           })}
         </div>
+
+        {/* Share Button Section */}
+        <div className="flex flex-col items-center justify-center mt-20 px-6">
+           <div className="w-24 h-px bg-slate-100 dark:bg-slate-800 mb-12"></div>
+           <button 
+             onClick={handleShare}
+             className="group flex items-center gap-3 px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full hover:bg-rose-400 dark:hover:bg-rose-400 hover:text-white dark:hover:text-white transition-all shadow-xl font-black uppercase tracking-widest text-sm"
+           >
+             <Share2 size={20} className="group-hover:rotate-12 transition-transform" />
+             Share Insights
+           </button>
+        </div>
       </article>
 
-    {/* 💡 留言系統區塊 */}
-    <div className="max-w-4xl mx-auto px-6 mb-20 mt-20"> 
-      {/* mt-20 拉開與文章的距離，讓頁面有呼吸感 */}
-      
-      <div className="
-        /* 1. 基礎佈局與圓角 */
-        rounded-[2.5rem] p-8 md:p-12 transition-all duration-500 border
-        
-        /* 2. Light Mode: 黑字白底 */
-        bg-white text-slate-900 border-slate-100 shadow-xl
-        
-        /* 3. Dark Mode: 白字暗底 (使用稍淺的深色增加層次) */
-        dark:bg-slate-900 dark:text-white dark:border-slate-800 
-        dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)]
-      ">
-        
-        {/* 標題區域 */}
-        <h3 className="text-2xl font-bold mb-10 flex items-center gap-4">
-          <span className="
-            /* 裝飾性圖示背景 */ 
-            p-3 rounded-2xl text-2xl
-            shadow-sm
-          ">
-            💬
-          </span>
-          交流與討論
-        </h3>
-        
-        {/* 留言系統本體 */}
-        <div className="min-h-[250px] w-full">
-          {/* 這裡確保 CommentSystem 內部不受外層 text-white 影響，通常 Giscus 會自帶主題 */}
+      {/* Discussion Section */}
+      <section className="max-w-4xl mx-auto px-6 py-20">
+        <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 md:p-12 border border-slate-100 dark:border-slate-800 shadow-xl">
+          <h3 className="text-2xl font-bold mb-10 flex items-center gap-4 dark:text-white">
+            <span className="p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl">💬</span>
+            Discussion
+          </h3>
           <CommentSystem />
         </div>
-      </div>
-    </div>
+      </section>
 
-      {/* 底部填充空間 */}
-      <div className="h-20"></div>
-
-      {/* 💡 點擊背景關閉抽屜的遮罩 */}
       {isDrawerOpen && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[90] transition-opacity" onClick={() => setIsDrawerOpen(false)}></div>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[90] transition-opacity" onClick={() => setIsDrawerOpen(false)}></div>
       )}
     </div>
   );

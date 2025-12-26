@@ -13,3 +13,8 @@
 .transition-soft {
   @apply transition-all duration-300 ease-in-out;
 }
+
+/* Prevent horizontal overflow globally */
+html, body {
+  overflow-x: clip;
+}
