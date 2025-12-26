@@ -52,7 +52,7 @@ const PostDetail = () => {
   if (!post) return <div className="text-center py-20 dark:text-white">Post not found</div>;
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 transition-colors duration-500">
+    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 transition-colors duration-500 article-content-loaded">
       <SEO 
         title={post.title} 
         description={post.desc} 

@@ -29,7 +29,11 @@ console.log("🚀 Prepared routes for react-snap:", allRoutes);
 run({
   source: "dist",
   include: allRoutes,
-  // 💡 增加延遲，確保 React 渲染完成
-  delay: 3000, 
-  puppeteerArgs: ["--no-sandbox", "--disable-setuid-sandbox"]
+  // 💡 不要只用延遲，改用更嚴格的等待
+  waitFor: '.article-content-loaded', // 在你的 PostDetail JSX 加上這個 class
+  puppeteerArgs: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage"
+  ]
 })
