@@ -29,8 +29,11 @@ console.log("🚀 Prepared routes for react-snap:", allRoutes);
 run({
   source: "dist",
   include: allRoutes,
-  // 💡 不要只用延遲，改用更嚴格的等待
-  waitFor: '.article-content-loaded', // 在你的 PostDetail JSX 加上這個 class
+  // 💡 關鍵：告知 react-snap 你的基礎路徑
+  publicPath: "/my-portfolio-vibecoding/", 
+  delay: 3000,
+  // 先移除 waitFor，我們改用 delay 來排查問題
+  // waitFor: '.article-content-loaded', 
   puppeteerArgs: [
     "--no-sandbox",
     "--disable-setuid-sandbox",
