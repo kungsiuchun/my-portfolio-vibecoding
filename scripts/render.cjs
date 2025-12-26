@@ -29,13 +29,7 @@ console.log("🚀 Prepared routes for react-snap:", allRoutes);
 run({
   source: "dist",
   include: allRoutes,
-  // 可以在這裡加入其他配置
-  puppeteerArgs: [
-    "--no-sandbox",
-    "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage"
-  ],
-}).catch((err) => {
-  console.error("❌ react-snap failed:", err);
-  process.exit(1);
-});
+  // 💡 增加延遲，確保 React 渲染完成
+  delay: 3000, 
+  puppeteerArgs: ["--no-sandbox", "--disable-setuid-sandbox"]
+})
