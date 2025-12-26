@@ -5,7 +5,6 @@ import { posts } from '../data/posts';
 import { ArrowLeft, Maximize2, FileText, X, Share2 } from 'lucide-react'; 
 import ReactMarkdown from 'react-markdown';
 import CommentSystem from '../components/CommentSystem';
-import SEO from '../components/SEO';
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -53,12 +52,6 @@ const PostDetail = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-6 transition-colors duration-500">
-      <SEO 
-        title={post.title} 
-        description={post.desc} 
-        image={post.coverImage} 
-        article={true}
-      />
 
   {/* ✅ 確保文字在 div 裡面，並檢查 z-index */}
   <div 
