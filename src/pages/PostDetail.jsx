@@ -150,23 +150,41 @@ const PostDetail = () => {
         </div>
       </article>
 
-      {/* 💡 留言系統區塊 */}
-      <div className="max-w-4xl mx-auto px-6 mb-20 mt-16"> 
-        {/* 這裡增加了 mt-16 作為與文章之間的 Margin */}
+    {/* 💡 留言系統區塊 */}
+    <div className="max-w-4xl mx-auto px-6 mb-20 mt-20"> 
+      {/* mt-20 拉開與文章的距離，讓頁面有呼吸感 */}
+      
+      <div className="
+        /* 1. 基礎佈局與圓角 */
+        rounded-[2.5rem] p-8 md:p-12 transition-all duration-500 border
         
-        <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 md:p-12 shadow-xl border border-slate-100 dark:border-slate-800 transition-all duration-500">
-          {/* 這裡使用了與文章卡片類似的 shadow-xl 和 rounded 樣式 */}
-          
-          <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-10 flex items-center gap-3">
-            <span className="dark:-500/20 p-2 rounded-lg text-xl">💬</span>
-            交流與討論
-          </h3>
-          
-          <div className="min-h-[200px]">
-            <CommentSystem />
-          </div>
+        /* 2. Light Mode: 黑字白底 */
+        bg-white text-slate-900 border-slate-100 shadow-xl
+        
+        /* 3. Dark Mode: 白字暗底 (使用稍淺的深色增加層次) */
+        dark:bg-slate-900 dark:text-white dark:border-slate-800 
+        dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)]
+      ">
+        
+        {/* 標題區域 */}
+        <h3 className="text-2xl font-bold mb-10 flex items-center gap-4">
+          <span className="
+            /* 裝飾性圖示背景 */ 
+            p-3 rounded-2xl text-2xl
+            shadow-sm
+          ">
+            💬
+          </span>
+          交流與討論
+        </h3>
+        
+        {/* 留言系統本體 */}
+        <div className="min-h-[250px] w-full">
+          {/* 這裡確保 CommentSystem 內部不受外層 text-white 影響，通常 Giscus 會自帶主題 */}
+          <CommentSystem />
         </div>
       </div>
+    </div>
 
       {/* 底部填充空間 */}
       <div className="h-20"></div>

@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { Home as HomeIcon, BookOpen, User, Github } from 'lucide-react';
 import ThemeToggle from './components/ThemeToggle';
+import SeasonalEffect from './components/SeasonalEffect';
 
 // 頁面組件
 import Home from './pages/Home';
@@ -10,6 +11,7 @@ import About from './pages/About';
 
 const Navbar = () => (
   <nav className="sticky top-0 z-50 bg-white/70 dark:bg-slate-950/70 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 transition-colors duration-500">
+    <SeasonalEffect /> {/* 💡 放在這裡，全站生效 */}
     <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
       <Link to="/" className="text-xl font-bold bg-gradient-to-r from-rose-400 to-sky-400 bg-clip-text text-transparent">
         SiuChunKung.Portfolio
