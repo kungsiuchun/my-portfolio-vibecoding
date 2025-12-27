@@ -65,22 +65,20 @@ export const posts = [
   },
   {
     id: 4,
-    title: "Advanced Data Analytics: Sales Performance Dashboard",
+    title: "Advanced Data Analytics: Genesis RMAP Media Performance Dashboard",
     date: "2025.12.23",
     category: "Data",
-    desc: "A comprehensive showcase of using Power BI to transform raw sales data into actionable business insights.",
-    // 💡 確保有這行，SEO 組件才能抓到圖片
-    coverImage: '/images/projects/sales-dashboard.png',
+    desc: "A comprehensive showcase of using Power BI to transform raw media performance data into actionable business insights.",
     // 💡 將內容拆分為不同類型的區塊
     sections: [
       { 
         type: 'text', 
         value: "<h3>Project Overview</h3><p>In this project, I tackled a massive dataset of retail transactions to identify key growth drivers. Here is the initial data cleaning and architecture mapping phase:</p>" 
       },
-      { type: 'image', value: "images/IMG_7299.jpeg", caption: "ETL & Data Cleaning Workflow" },
+      { type: 'image', value: "images/post_4_data_model.png", caption: "Power BI Data Model Layout" },
       { 
         type: 'text', 
-        value: "<h3>Interactive Dashboard</h3><p>The following report allows you to filter by region, product category, and time period to explore sales trends dynamically:</p>" 
+        value: "<h3>Interactive Dashboard</h3><p>The following report allows you to filter by region, partner, and time period to explore media trends dynamically:</p>" 
       },
       { 
         type: 'powerbi', 

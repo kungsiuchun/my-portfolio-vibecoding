@@ -37,27 +37,52 @@ const PostDetail = () => {
     }
   }, [showToast]);
 
-  const handleShare = (postTitle) => {
-    // 💡 第一步：發送 GA 追蹤
-    if (window.gtag) {
-      window.gtag('event', 'share_insights_clicked', {
-        'event_category': 'Engagement',
-        'event_label': postTitle,
-      });
-      console.log("📊 GA Tracked: Share Clicked");
-    }
+const handleShare = (postTitle) => {
+  // 💡 點擊瞬間就發送一個「意圖」事件 (Click Intent)
+  if (window.gtag) {
+    window.gtag('event', 'share_attempt', {
+      'post_title': postTitle,
+      'method': navigator.share ? 'native_share' : 'clipboard'
+    });
+  }
 
-    // 💡 第二步：執行分享邏輯
-    if (navigator.share) {
-      navigator.share({
-        title: postTitle,
-        url: window.location.href,
-      }).catch(err => console.log("Share cancelled"));
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copied!');
-    }
-  };
+  if (navigator.share) {
+    navigator.share({
+      title: postTitle,
+      url: window.location.href,
+    })
+    .then(() => {
+      // 成功分享
+      if (window.gtag) {
+        window.gtag('event', 'share_completed', { 'post_title': postTitle });
+        console.log("📊 GA Tracked: Share Completed");
+      }
+    })
+    .catch((err) => {
+      // 只有在不是因為「使用者手動取消」的情況下才記錄錯誤
+      // AbortError 是使用者點了取消按鈕
+      if (err.name !== 'AbortError') {
+        console.error("Share failed:", err);
+      } else if (window.gtag) {
+        window.gtag('event', 'share_dismissed', { 'post_title': postTitle });
+        console.log("📊 GA Tracked: Share Cancelled by User");
+      }
+    });
+  } else {
+    // 桌面版或不支援原生分享的瀏覽器
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => {
+        alert('Link copied to clipboard!');
+        if (window.gtag) {
+          window.gtag('event', 'share_completed', { 
+            'post_title': postTitle,
+            'method': 'clipboard' 
+          });
+        }
+      })
+      .catch(err => console.error('Clipboard failed', err));
+  }
+};
 
   if (!post) return <div className="text-center py-20 dark:text-white">Post not found</div>;
 
