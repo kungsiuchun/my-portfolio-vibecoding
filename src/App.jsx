@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { useLocation, BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import React, { useEffect } from 'react'; // 💡 關鍵：這裡必須加上 useEffect
 import { Home as HomeIcon, BookOpen, User, Github } from 'lucide-react';
 import ThemeToggle from './components/ThemeToggle';
 import SeasonalEffect from './components/SeasonalEffect';

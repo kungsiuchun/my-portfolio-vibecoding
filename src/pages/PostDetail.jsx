@@ -17,6 +17,18 @@ const PostDetail = () => {
   // ✅ Use loose comparison or string conversion to avoid type mismatch
   const post = posts.find(p => p.id.toString() === id);
 
+  // 1. 定義追蹤函式 (放在組件外面或裡面皆可)
+  const trackPowerBIInteraction = (reportTitle) => {
+    if (window.gtag) {
+      window.gtag('event', 'view_powerbi', {
+        'event_category': 'Engagement',
+        'event_label': reportTitle || 'Sales Dashboard',
+        'value': 1
+      });
+      console.log("📊 GA Tracked: Power BI Viewed");
+    }
+  };
+
   // ✅ Toast auto-close logic
   useEffect(() => {
     if (showToast) {
@@ -25,27 +37,25 @@ const PostDetail = () => {
     }
   }, [showToast]);
 
-  const handleShare = async () => {
-    console.log("Share button clicked"); // 確保按鈕有反應
+  const handleShare = (postTitle) => {
+    // 💡 第一步：發送 GA 追蹤
+    if (window.gtag) {
+      window.gtag('event', 'share_insights_clicked', {
+        'event_category': 'Engagement',
+        'event_label': postTitle,
+      });
+      console.log("📊 GA Tracked: Share Clicked");
+    }
 
-    const shareData = {
-      title: post.title,
-      text: post.desc,
-      url: window.location.href,
-    };
-
-  if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-        // ✅ 即使是原生分享，也可以給個小提示（選填）
-        // setShowToast(true); 
-      } catch (err) {
-        console.log('Share cancelled');
-      }
+    // 💡 第二步：執行分享邏輯
+    if (navigator.share) {
+      navigator.share({
+        title: postTitle,
+        url: window.location.href,
+      }).catch(err => console.log("Share cancelled"));
     } else {
-      await navigator.clipboard.writeText(window.location.href);
-      // ✅ 只有在「複製連結」模式下，Toast 才真正必要
-      setShowToast(true);
+      navigator.clipboard.writeText(window.location.href);
+      alert('Link copied!');
     }
   };
 
@@ -156,6 +166,8 @@ const PostDetail = () => {
                       src={section.value}
                       frameBorder="0"
                       allowFullScreen={true}
+                      // 💡 當 iframe 載入完成時觸發追蹤
+                      onLoad={() => trackPowerBIInteraction(post.title)}
                     ></iframe>
                     
                     {/* 右上角提示 */}
@@ -164,6 +176,7 @@ const PostDetail = () => {
                          <Maximize2 size={16} /> Toggle Full Screen in the Power BI toolbar
                        </span>
                     </div>
+                    
                   </div>
                 </div>
               );
@@ -190,7 +203,9 @@ const PostDetail = () => {
         <div className="flex flex-col items-center justify-center mt-20 px-6">
            <div className="w-24 h-px bg-slate-100 dark:bg-slate-800 mb-12"></div>
            <button 
-             onClick={handleShare}
+             onClick={() => {
+              handleShare();
+            }}
              className="group flex items-center gap-3 px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full hover:bg-rose-400 dark:hover:bg-rose-400 hover:text-white dark:hover:text-white transition-all shadow-xl font-black uppercase tracking-widest text-sm"
            >
              <Share2 size={20} className="group-hover:rotate-12 transition-transform" />
