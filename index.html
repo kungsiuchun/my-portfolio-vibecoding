@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
   <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2Y82W30TSX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      // 💡 注意：這裡我們先不發送 pageview，由 React 來控制
+      gtag('config', 'G-2Y82W30TSX', { send_page_view: false });
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,8 +18,8 @@
     <meta property="og:description" content="Explore my data insights and web projects.">
     <title>SiuChun Kung | My Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="/my-portfolio-vibecoding/assets/index-4e433bd1.js"></script>
-    <link rel="stylesheet" href="/my-portfolio-vibecoding/assets/index-8a1fc463.css">
+    <script type="module" crossorigin src="/my-portfolio-vibecoding/assets/index-e1c3ee81.js"></script>
+    <link rel="stylesheet" href="/my-portfolio-vibecoding/assets/index-d63ee53a.css">
   </head>
   <body>
     <div id="root"></div>
