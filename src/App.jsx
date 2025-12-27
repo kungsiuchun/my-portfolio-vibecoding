@@ -9,6 +9,22 @@ import BlogList from './pages/BlogList';
 import PostDetail from './pages/PostDetail';
 import About from './pages/About';
 
+function Analytics() {
+  const location = useLocation();
+
+  useEffect(() => {
+    // 💡 每當路由 (location) 改變時，手動發送數據給 GA
+    if (window.gtag) {
+      window.gtag('config', 'G-XXXXXXXXXX', {
+        page_path: location.pathname + location.search,
+      });
+      console.log(`GA tracked: ${location.pathname}`);
+    }
+  }, [location]);
+
+  return null;
+}
+
 const Navbar = () => (
   <nav className="sticky top-0 z-50 bg-white/70 dark:bg-slate-950/70 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 transition-colors duration-500">
     <SeasonalEffect /> {/* 💡 放在這裡，全站生效 */}
@@ -57,6 +73,7 @@ function App() {
         v7_relativeSplatPath: true,
       }}
     >
+      <Analytics /> {/* 💡 放在這裡 */}
       {/* 💡 這裡加上 dark:bg-slate-950 確保深色模式背景正確 */}
       <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 transition-colors duration-500">
         <Navbar />

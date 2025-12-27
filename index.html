@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
   <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2Y82W30TSX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      // 💡 注意：這裡我們先不發送 pageview，由 React 來控制
+      gtag('config', 'G-2Y82W30TSX', { send_page_view: false });
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

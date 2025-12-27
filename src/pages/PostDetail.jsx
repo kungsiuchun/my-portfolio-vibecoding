@@ -116,21 +116,30 @@ const PostDetail = () => {
           {post.sections.map((section, index) => {
             if (section.type === 'text') {
               return (
-                <div key={index} className="w-full max-w-3xl px-6 my-6">
-                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-xl md:text-2xl font-light">
-                    {section.value}
-                  </p>
-                </div>
+                <div 
+                  key={index} 
+                  // 💡 Added 'prose-slate dark:prose-invert' to handle text colors automatically
+                  // 💡 Removed the inner <p> tag to allow HTML rendering
+                  className="prose prose-slate dark:prose-invert max-w-none mb-12 w-full
+                            my-8 px-6 md:px-12
+                            text-slate-600 dark:text-slate-300 
+                            text-lg md:text-xl font-light leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: section.value }}
+                />
               );
             }
             
+
+            // --- Power BI 區塊 ---
             if (section.type === 'powerbi') {
               return (
                 <div key={index} className="w-full px-4 md:px-10 my-16">
-                  <div className="max-w-7xl mx-auto mb-4 flex justify-end">
+                  
+                  {/* 💡 增加技術文件切換按鈕 */}
+                  <div className="max-w-8xl mx-auto mb-4 flex justify-end">
                     <button 
                       onClick={() => {
-                        setActiveDoc(section.doc || "Technical documentation not available yet.");
+                        setActiveDoc(section.doc || "尚未提供技術文件。");
                         setIsDrawerOpen(true);
                       }}
                       className="flex items-center gap-2 px-6 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl hover:bg-rose-400 dark:hover:bg-rose-400 transition-all shadow-lg font-bold text-sm"
@@ -138,17 +147,28 @@ const PostDetail = () => {
                       <FileText size={18} /> View Technical Details
                     </button>
                   </div>
-                  <div className="relative w-full aspect-video md:aspect-[21/9] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50 dark:bg-slate-800">
+
+                  {/* 外層容器增加 dark:ring-slate-700 和陰影調整 */}
+                  <div className="group relative w-full aspect-video md:aspect-[21/9] rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50 dark:bg-slate-800">
                     <iframe
                       title="Power BI Dashboard"
                       className="absolute top-0 left-0 w-full h-full"
                       src={section.value}
+                      frameBorder="0"
                       allowFullScreen={true}
                     ></iframe>
+                    
+                    {/* 右上角提示 */}
+                    <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                       <span className="flex items-center gap-2 bg-black/50 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm">
+                         <Maximize2 size={16} /> Toggle Full Screen in the Power BI toolbar
+                       </span>
+                    </div>
                   </div>
                 </div>
               );
             }
+
 
             if (section.type === 'image') {
               const imgSrc = section.value.startsWith('http') 
