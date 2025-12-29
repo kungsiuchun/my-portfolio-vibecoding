@@ -2,6 +2,7 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { posts } from '../data/posts';
 import FireWriting from '../components/FireWriting';
+import GithubStats from '../components/GithubStats';
 
 const Home = () => {
   const featuredPosts = [...posts]
@@ -25,6 +26,13 @@ const Home = () => {
         </p>
       </section>
 
+
+  
+      <section className="mt-20">
+        <GithubStats />
+      </section>
+
+
       {/* Featured Posts Section */}
       <section className="px-6">
         <div className="flex items-center justify-between mb-12">
@@ -35,6 +43,7 @@ const Home = () => {
             View All <span className="group-hover:translate-x-1 transition-transform">→</span>
           </Link>
         </div>
+
 
         {/* 增加卡片間距 Gap 到 12，給予更多呼吸空間 */}
         <div className="grid md:grid-cols-2 gap-12 lg:gap-16">

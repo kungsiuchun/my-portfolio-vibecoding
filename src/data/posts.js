@@ -63,7 +63,7 @@ export const posts = [
       },
     ]
   },
-  {
+  { 
     id: 4,
     title: "Advanced Data Analytics: Genesis RMAP Media Performance Dashboard",
     date: "2025.12.23",
