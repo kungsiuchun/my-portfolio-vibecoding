@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react';
 const SiteAnalytics = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  // Vite 會自動處理 Base URL
+  const statsPath = `${import.meta.env.BASE_URL}stats.json`;
 
   useEffect(() => {
-    // 💡 關鍵：fetch 放在 public 資料夾下的 stats.json
-    // 使用 './stats.json' 確保在 GitHub Pages 的路徑正確
-    fetch('./stats.json')
+    // 💡 修正方法：使用絕對路徑
+    fetch(statsPath)
       .then((res) => {
         if (!res.ok) throw new Error("尚未生成數據檔案");
         return res.json();
