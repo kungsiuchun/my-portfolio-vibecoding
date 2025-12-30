@@ -26,7 +26,7 @@ const SiteAnalytics = () => {
   if (!data) return null;
 
   return (
-    <div className="w-full max-w-2xl mx-auto mt-12 p-8 bg-slate-900 text-white rounded-3xl shadow-2xl border border-slate-700">
+    <div className="w-full max-w-2xl mx-auto p-8 bg-slate-900 text-white rounded-3xl shadow-2xl border border-slate-700">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h3 className="text-2xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
