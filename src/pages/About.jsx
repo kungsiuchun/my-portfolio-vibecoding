@@ -1,6 +1,7 @@
 import React from 'react';
 import { User, Code, Database, LineChart, Mail, Github, Linkedin } from 'lucide-react';
 
+
 const About = () => {
   const skillCategories = [
     {

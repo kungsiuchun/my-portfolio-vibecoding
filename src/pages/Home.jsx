@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { posts } from '../data/posts';
 import FireWriting from '../components/FireWriting';
 import GithubStats from '../components/GithubStats';
+import SiteAnalytics from '../components/SiteAnalytics';
 
 const Home = () => {
   const featuredPosts = [...posts]
@@ -28,9 +29,14 @@ const Home = () => {
 
 
   
-      <section className="mt-20">
-        <GithubStats />
-      </section>
+      {/* 📊 數據分析師的雙重展示 */}
+        <section className="container mx-auto px-4 pb-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <GithubStats />
+            <SiteAnalytics />
+          </div>
+        </section>
+
 
 
       {/* Featured Posts Section */}
