@@ -4,7 +4,7 @@ const SiteAnalytics = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   // Vite 會自動處理 Base URL
-  const statsPath = 'https://raw.githubusercontent.com/kungsiuchun/my-portfolio-vibecoding/main/stat.json';
+  const statsPath = 'https://raw.githubusercontent.com/kungsiuchun/my-portfolio-vibecoding/refs/heads/main/public/stats.json';
 
   useEffect(() => {
     // 💡 修正方法：使用絕對路徑
