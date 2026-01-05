@@ -6,6 +6,7 @@ import { ArrowLeft, Maximize2, FileText, X, Share2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import CommentSystem from '../components/CommentSystem';
 import SEO from '../components/SEO';
+import StockDashboard from '../components/StockDashboard';
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -134,6 +135,7 @@ const handleShare = (postTitle) => {
           <ArrowLeft size={20} /> Back to List
         </button>
       </div>
+                  
 
       {/* Main Article */}
       <article className="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[4rem] shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden pb-20">
@@ -146,6 +148,8 @@ const handleShare = (postTitle) => {
           </h1>
           <p className="text-slate-400 dark:text-slate-500 text-lg">{post.date}</p>
         </header>
+
+
 
         <div className="flex flex-col items-center w-full">
           {post.sections.map((section, index) => {
@@ -163,7 +167,26 @@ const handleShare = (postTitle) => {
                 />
               );
             }
-            
+
+            {/* --- Markdown 內容區塊 ---*/}
+            if (section.type === 'markdown') {
+              return (
+                <div key={index} className="w-full px-6 md:px-12 my-12">
+                  <div className="prose prose-slate dark:prose-invert max-w-4xl mx-auto px-6 py-10">
+                    <ReactMarkdown>{section.value}</ReactMarkdown>
+                  </div>
+              </div>
+              );
+            }
+
+            // --- 處理股票儀表板類型 ---
+        if (section.type === 'stock_dashboard') {
+          return (
+            <div key={index} className="w-full max-w-5xl px-6 my-12">
+              <StockDashboard />
+            </div>
+          );
+        }
 
             // --- Power BI 區塊 ---
             if (section.type === 'powerbi') {

@@ -94,5 +94,44 @@ export const posts = [
 `
       },
     ]
-  }
+  },
+  { 
+    id: 5,
+    title: "自動化美股數據管線：Python + GitHub Actions + 數據可視化",
+    date: "2026.01.04",
+    category: "Tech",
+    desc: "本項目旨在建立一個完全自動化的數據獲取、儲存與展示系統。透過 Python 腳本調用 Polygon.io API，獲取 Dow 30 成分股的每日交易數據，並利用 GitHub Actions 實現每天一次的自動化更新。",
+    sections: [
+      { type: 'image', value: "images/post_5_workflow.png", caption: "GitHub Actions Workflow Diagram" },
+      { type: 'markdown', value:
+`
+## 核心技術細節
+
+### 1. 數據獲取 (Data Ingestion)
+使用 Python 的 \`requests\` 模組調用 Polygon API。為了優化數據質量與系統性能，我們實施了以下邏輯：
+* **自動化日期計算**：動態計算最新交易日，避免手動輸入。
+* **Dow 30 過濾**：從數千家公司中精確篩選出 Dow 30 成份股，將數據量減少 99%，提升前端載入速度。
+* **防重複寫入**：在寫入 CSV 前，腳本會先掃描現有數據，確保同一交易日的數據不會被重複記錄。
+
+### 2. 歷史數據補回 (Backfilling)
+針對過去一年的歷史數據，開發了專用的 \`backfill.py\`：
+* **交易日檢查**：自動跳過週末與節假日，節省 API 調用次數。
+* **速率限制處理**：針對免費版 API 每分鐘 5 次的限制，加入動態休眠 (\`time.sleep\`) 機制。
+
+### 3. 自動化排程 (Automation)
+利用 **GitHub Actions** 實現真正的 Serverless 運行。
+* **Cron Job**：設定為在美股收盤後定時抓取。
+* **Git-as-a-DB**：將 GitHub 倉庫作為輕量級數據庫，數據以 CSV 格式存儲於 \`main\` 分支，確保前端能通過 Raw URL 即時讀取。
+
+## 數據可視化
+前端使用 **React + Recharts + PapaParse** 進行開發：
+* **數據流**：\`GitHub Raw CSV\` -> \`PapaParse (JSON)\` -> \`Recharts (LineChart)\`。
+* **交互性**：用戶可以通過下拉選單切換不同的股票代碼 (Ticker)，即時渲染該公司的股價走勢。`},
+{ type: 'stock_dashboard', value: '' },
+    ]
+  },
+
+
 ];
+
+
