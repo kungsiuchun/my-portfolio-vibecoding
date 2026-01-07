@@ -19,7 +19,7 @@ A modern portfolio website built with React, Tailwind CSS, and Giscus for commen
 my-portfolio-vibecoding/
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml           # 自動部署網站至 GitHub Pages 的工作流
+│       └── update_stats.yml           # 自動部署網站至 GitHub Pages 的工作流
 ├── public/                      # 靜態資源 (不需打包，直接存取)
 │   └── images/                  # 存放文章封面圖、個人照及流程圖
 ├── src/                         # 前端 React 原始碼主目錄
@@ -28,11 +28,6 @@ my-portfolio-vibecoding/
 │   │   ├── SEO.jsx              # 搜尋引擎優化與動態 Meta Tags
 │   │   ├── CommentSystem.jsx    # 整合 Giscus 的評論系統
 │   │   ├── StockDashboard.jsx   # (New) 讀取 CSV 並渲染股票走勢圖
-│   │   ├── GlassCard.jsx        # 毛玻璃效果的容器組件
-│   │   ├── InteractiveBackground.jsx # 動態背景裝飾
-│   │   ├── FloatingNav.jsx      # 懸浮導覽列
-│   │   ├── StatCard.jsx         # 數據統計卡片 (用於首頁展示)
-│   │   └── ProjectCard.jsx      # 作品集專案卡片
 │   ├── data/                    
 │   │   └── posts.js             # 數據中心：定義所有文章內容、Markdown 及組件位置
 │   ├── pages/                   # 路由對應的完整頁面
@@ -45,4 +40,5 @@ my-portfolio-vibecoding/
 ├── package.json                 # 專案套件管理與開發指令 (Vite, Tailwind, Lucide)
 ├── tailwind.config.js           # Tailwind CSS 樣式與排版插件配置
 └── vite.config.js               # Vite 編譯設定
+
 
