@@ -11,7 +11,7 @@ const StockDashboard = () => {
     
   // 在 StockDashboard.jsx 或數據讀取處
   const timestamp = new Date().getTime();
-  const CSV_URL = `https://raw.githubusercontent.com/kungsiuchun/stock-trading-python-app/main/tickers.csv?t=${timestamp}`;
+  const CSV_URL = `https://raw.githubusercontent.com/kungsiuchun/stock-trading-python-app/main/dow30.csv?t=${timestamp}`;
 
     Papa.parse(CSV_URL, {
       download: true,
