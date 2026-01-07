@@ -10,19 +10,26 @@ const StockDashboard = () => {
   useEffect(() => {
     
   // 在 StockDashboard.jsx 或數據讀取處
-  const CSV_URL = `https://raw.githubusercontent.com/kungsiuchun/stock-trading-python-app/main/tickers.csv?t=${new Date().getTime()}`;
+  const timestamp = new Date().getTime();
+  const CSV_URL = `https://raw.githubusercontent.com/kungsiuchun/stock-trading-python-app/main/tickers.csv?t=${timestamp}`;
 
     Papa.parse(CSV_URL, {
       download: true,
       header: true,
       dynamicTyping: true,
+      skipEmptyLines: true, // 💡 建議加上這行，防止 CSV 末尾空行導致報錯
       complete: (results) => {
-        const cleanData = results.data.filter(row => row.date && row.T);
-        setData(cleanData);
-        
-        // 取得所有不重複的股票代碼供選單使用
-        const uniqueTickers = [...new Set(cleanData.map(item => item.T))];
-        setTickers(uniqueTickers);
+        console.log("Parse Complete:", results.data);
+        if (results.data && results.data.length > 0) {
+          const cleanData = results.data.filter(row => row.date && row.T);
+          setData(cleanData);
+          const uniqueTickers = [...new Set(cleanData.map(item => item.T))];
+          setTickers(uniqueTickers);
+        }
+      },
+      error: (error) => {
+        console.error("PapaParse Error:", error);
+        // 可以在這裡設定一個 setError 狀態來顯示錯誤訊息給使用者
       }
     });
   }, []);
