@@ -100,6 +100,7 @@ export const posts = [
     title: "自動化美股數據管線：Python + GitHub Actions + 數據可視化",
     date: "2026.01.04",
     category: "Tech",
+    githubUrl: "https://github.com/kungsiuchun/stock-trading-python-app",
     desc: "本項目旨在建立一個完全自動化的數據獲取、儲存與展示系統。透過 Python 腳本調用 Polygon.io API，獲取 Dow 30 成分股的每日交易數據，並利用 GitHub Actions 實現每天一次的自動化更新。",
     sections: [
       { type: 'image', value: "images/post_5_workflow.png", caption: "GitHub Actions Workflow Diagram" },

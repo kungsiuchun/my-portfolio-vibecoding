@@ -1,36 +1,127 @@
-// src/pages/PostDetail.jsx
-import { useState, useEffect } from 'react'; // ✅ Fix: Added useEffect
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { posts } from '../data/posts';
-import { ArrowLeft, Maximize2, FileText, X, Share2 } from 'lucide-react'; 
+import { Github, ArrowLeft, Maximize2, FileText, X, Share2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+
+// Components
 import CommentSystem from '../components/CommentSystem';
 import SEO from '../components/SEO';
 import StockDashboard from '../components/StockDashboard';
+import { posts } from '../data/posts';
 
+// --- Sub-component for Cleaner Rendering ---
+const PostSection = ({ section, onOpenDoc, onTrackBI, postTitle }) => {
+  switch (section.type) {
+    case 'text':
+      return (
+        <div
+          className="prose prose-slate dark:prose-invert max-w-none mb-12 w-full my-8 px-6 md:px-12 text-slate-600 dark:text-slate-300 text-lg md:text-xl font-light leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: section.value }}
+        />
+      );
+
+    case 'markdown':
+      return (
+        <div className="w-full px-6 md:px-12 my-12">
+          <div className="prose prose-slate dark:prose-invert max-w-4xl mx-auto px-6 py-10">
+            <ReactMarkdown>{section.value}</ReactMarkdown>
+          </div>
+        </div>
+      );
+
+    case 'stock_dashboard':
+      return (
+        <div className="w-full max-w-5xl px-6 my-12">
+          <StockDashboard />
+        </div>
+      );
+
+    case 'powerbi':
+      return (
+        <div className="w-full px-4 md:px-10 my-16">
+          <div className="max-w-8xl mx-auto mb-4 flex justify-end">
+            <button
+              onClick={() => onOpenDoc(section.doc)}
+              className="flex items-center gap-2 px-6 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl hover:bg-rose-400 dark:hover:bg-rose-400 transition-all shadow-lg font-bold text-sm"
+            >
+              <FileText size={18} /> View Technical Details
+            </button>
+          </div>
+          <div className="group relative w-full aspect-video md:aspect-[21/9] rounded-[2.5rem] overflow-hidden shadow-2xl ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50 dark:bg-slate-800">
+            <iframe
+              title="Power BI Dashboard"
+              className="absolute inset-0 w-full h-full"
+              src={section.value}
+              allowFullScreen
+              onLoad={() => onTrackBI(postTitle)}
+            />
+            <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="flex items-center gap-2 bg-black/50 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm">
+                <Maximize2 size={16} /> Toggle Full Screen
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+
+    case 'image':
+      const imgSrc = section.value.startsWith('http')
+        ? section.value
+        : `${import.meta.env.BASE_URL}${section.value.replace(/^\//, '')}`;
+      return (
+        <div className="w-full max-w-5xl px-6 my-12 text-center">
+          <img src={imgSrc} alt={section.caption} className="w-full rounded-[2.5rem] shadow-xl border dark:border-slate-800" />
+          {section.caption && <p className="text-slate-400 mt-6 italic">{section.caption}</p>}
+        </div>
+      );
+
+    default:
+      return null;
+  }
+};
+
+// --- Main Component ---
 const PostDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [activeDoc, setActiveDoc] = useState("");
   const [showToast, setShowToast] = useState(false);
 
-  // ✅ Use loose comparison or string conversion to avoid type mismatch
   const post = posts.find(p => p.id.toString() === id);
 
-  // 1. 定義追蹤函式 (放在組件外面或裡面皆可)
-  const trackPowerBIInteraction = (reportTitle) => {
+  // 1. Analytics & Actions
+  const trackPowerBIInteraction = useCallback((reportTitle) => {
     if (window.gtag) {
       window.gtag('event', 'view_powerbi', {
-        'event_category': 'Engagement',
-        'event_label': reportTitle || 'Sales Dashboard',
-        'value': 1
+        event_category: 'Engagement',
+        event_label: reportTitle || 'Sales Dashboard',
+        value: 1
       });
-      console.log("📊 GA Tracked: Power BI Viewed");
+    }
+  }, []);
+
+  const handleShare = async () => {
+    if (window.gtag) {
+      window.gtag('event', 'share_attempt', { post_title: post.title });
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: post.title, url: window.location.href });
+        window.gtag?.('event', 'share_completed', { post_title: post.title });
+      } catch (err) {
+        if (err.name !== 'AbortError') console.error(err);
+      }
+    } else {
+      await navigator.clipboard.writeText(window.location.href);
+      setShowToast(true);
+      window.gtag?.('event', 'share_completed', { post_title: post.title, method: 'clipboard' });
     }
   };
 
-  // ✅ Toast auto-close logic
+  // 2. Lifecycle
   useEffect(() => {
     if (showToast) {
       const timer = setTimeout(() => setShowToast(false), 3000);
@@ -38,108 +129,62 @@ const PostDetail = () => {
     }
   }, [showToast]);
 
-const handleShare = (postTitle) => {
-  // 💡 點擊瞬間就發送一個「意圖」事件 (Click Intent)
-  if (window.gtag) {
-    window.gtag('event', 'share_attempt', {
-      'post_title': postTitle,
-      'method': navigator.share ? 'native_share' : 'clipboard'
-    });
-  }
-
-  if (navigator.share) {
-    navigator.share({
-      title: postTitle,
-      url: window.location.href,
-    })
-    .then(() => {
-      // 成功分享
-      if (window.gtag) {
-        window.gtag('event', 'share_completed', { 'post_title': postTitle });
-        console.log("📊 GA Tracked: Share Completed");
-      }
-    })
-    .catch((err) => {
-      // 只有在不是因為「使用者手動取消」的情況下才記錄錯誤
-      // AbortError 是使用者點了取消按鈕
-      if (err.name !== 'AbortError') {
-        console.error("Share failed:", err);
-      } else if (window.gtag) {
-        window.gtag('event', 'share_dismissed', { 'post_title': postTitle });
-        console.log("📊 GA Tracked: Share Cancelled by User");
-      }
-    });
-  } else {
-    // 桌面版或不支援原生分享的瀏覽器
-    navigator.clipboard.writeText(window.location.href)
-      .then(() => {
-        alert('Link copied to clipboard!');
-        if (window.gtag) {
-          window.gtag('event', 'share_completed', { 
-            'post_title': postTitle,
-            'method': 'clipboard' 
-          });
-        }
-      })
-      .catch(err => console.error('Clipboard failed', err));
-  }
-};
-
   if (!post) return <div className="text-center py-20 dark:text-white">Post not found</div>;
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-6 transition-colors duration-500">
-      <SEO 
-        title={post.title} 
-        description={post.desc} 
-        image={post.coverImage} 
-        article={true}
-      />
+      <SEO title={post.title} description={post.desc} image={post.coverImage} article />
 
-  {/* ✅ 確保文字在 div 裡面，並檢查 z-index */}
-  <div 
-    className={`fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] transition-all duration-500 transform ${
-      showToast ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'
-    }`}
-  >
-    <div className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-800 dark:border-slate-200">
-      <div className="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></div>
-      {/* 💡 這裡一定要有文字 */}
-      <span className="text-sm font-bold">Link copied to clipboard!</span>
-    </div>
-  </div>
-
-      {/* Documentation Drawer */}
-      <div className={`fixed inset-y-0 right-0 w-full md:w-[450px] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl z-[100] shadow-2xl transform transition-transform duration-500 ease-in-out border-l border-slate-200 dark:border-slate-800 ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="h-full flex flex-col p-8">
-          <div className="flex items-center justify-between mb-8 flex-shrink-0">
-            <h3 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-              <FileText className="text-rose-400" /> Documentation
-            </h3>
-            <button onClick={() => setIsDrawerOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
-              <X className="dark:text-white" size={24} />
-            </button>
-          </div>
-          <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar prose prose-slate dark:prose-invert">
-            <ReactMarkdown>{activeDoc}</ReactMarkdown>
-          </div>
+      {/* Toast Notification */}
+      <div className={`fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] transition-all duration-500 transform ${showToast ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'}`}>
+        <div className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-800 dark:border-slate-200">
+          <div className="w-2 h-2 rounded-full bg-rose-400 animate-pulse" />
+          <span className="text-sm font-bold">Link copied to clipboard!</span>
         </div>
       </div>
 
+      {/* Documentation Drawer */}
+      <aside className={`fixed inset-y-0 right-0 w-full md:w-[450px] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl z-[100] shadow-2xl transform transition-transform duration-500 border-l border-slate-200 dark:border-slate-800 ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="h-full flex flex-col p-8">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-2xl font-bold dark:text-white flex items-center gap-2">
+              <FileText className="text-rose-400" /> Documentation
+            </h3>
+            <button onClick={() => setIsDrawerOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full">
+              <X className="dark:text-white" size={24} />
+            </button>
+          </div>
+          <div className="flex-grow overflow-y-auto custom-scrollbar prose prose-slate dark:prose-invert">
+            <ReactMarkdown>{activeDoc || "No technical documentation available."}</ReactMarkdown>
+          </div>
+        </div>
+      </aside>
+
       {/* Header Actions */}
-      <div className="mb-6 mt-6">
+      <div className="mb-6 mt-6 flex justify-between items-center">
         <button 
           onClick={() => navigate(-1)} 
           className="flex items-center gap-2 text-slate-400 hover:text-rose-400 transition-all font-medium"
         >
           <ArrowLeft size={20} /> Back to List
         </button>
+
+        {/* ✅ 新增：如果有 githubUrl 就顯示按鈕 */}
+        {post.githubUrl && (
+          <a 
+            href={post.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl transition-all text-sm font-medium border border-slate-700"
+          >
+            <Github size={18} /> View Source Code
+          </a>
+        )}
       </div>
-                  
 
       {/* Main Article */}
       <article className="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[4rem] shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden pb-20">
-        <header className="pt-20 pb-12 px-6 text-center max-w-4xl mx-auto">
+        <div className="pt-20 pb-12 px-6 text-center max-w-4xl mx-auto">
           <span className="px-4 py-1.5 bg-rose-50 dark:bg-rose-500/10 text-rose-400 rounded-full text-xs font-black uppercase tracking-widest">
             {post.category}
           </span>
@@ -147,122 +192,55 @@ const handleShare = (postTitle) => {
             {post.title}
           </h1>
           <p className="text-slate-400 dark:text-slate-500 text-lg">{post.date}</p>
-        </header>
-
-
+        </div>
 
         <div className="flex flex-col items-center w-full">
-          {post.sections.map((section, index) => {
-            if (section.type === 'text') {
-              return (
-                <div 
-                  key={index} 
-                  // 💡 Added 'prose-slate dark:prose-invert' to handle text colors automatically
-                  // 💡 Removed the inner <p> tag to allow HTML rendering
-                  className="prose prose-slate dark:prose-invert max-w-none mb-12 w-full
-                            my-8 px-6 md:px-12
-                            text-slate-600 dark:text-slate-300 
-                            text-lg md:text-xl font-light leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: section.value }}
-                />
-              );
-            }
+          {post.sections.map((section, idx) => (
+            <PostSection 
+              key={idx} 
+              section={section} 
+              postTitle={post.title}
+              onTrackBI={trackPowerBIInteraction}
+              onOpenDoc={(doc) => { setActiveDoc(doc); setIsDrawerOpen(true); }}
+            />
+          ))}
+        </div>
 
-            {/* --- Markdown 內容區塊 ---*/}
-            if (section.type === 'markdown') {
-              return (
-                <div key={index} className="w-full px-6 md:px-12 my-12">
-                  <div className="prose prose-slate dark:prose-invert max-w-4xl mx-auto px-6 py-10">
-                    <ReactMarkdown>{section.value}</ReactMarkdown>
-                  </div>
-              </div>
-              );
-            }
-
-            // --- 處理股票儀表板類型 ---
-        if (section.type === 'stock_dashboard') {
-          return (
-            <div key={index} className="w-full max-w-5xl px-6 my-12">
-              <StockDashboard />
+        {/* 你也可以在文章末尾再放一個更大的 GitHub Call-to-action */}
+        {post.githubUrl && (
+          <div className="mt-16 px-6 md:px-12">
+            <div className="bg-slate-50 dark:bg-slate-800/50 rounded-3xl p-8 border border-dashed border-slate-200 dark:border-slate-700 text-center">
+              <Github className="mx-auto mb-4 text-slate-400" size={40} />
+              <h3 className="text-xl font-bold dark:text-white mb-2">想查看完整原始碼嗎？</h3>
+              <p className="text-slate-500 dark:text-slate-400 mb-6">這個專案的 Python 腳本與 Workflow 設定皆已開源在 GitHub。</p>
+              <a 
+                href={post.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-bold hover:scale-105 transition-transform"
+              >
+                探索 GitHub Repository
+              </a>
+              
             </div>
-          );
-        }
+          </div>
+        )}
 
-            // --- Power BI 區塊 ---
-            if (section.type === 'powerbi') {
-              return (
-                <div key={index} className="w-full px-4 md:px-10 my-16">
-                  
-                  {/* 💡 增加技術文件切換按鈕 */}
-                  <div className="max-w-8xl mx-auto mb-4 flex justify-end">
-                    <button 
-                      onClick={() => {
-                        setActiveDoc(section.doc || "尚未提供技術文件。");
-                        setIsDrawerOpen(true);
-                      }}
-                      className="flex items-center gap-2 px-6 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl hover:bg-rose-400 dark:hover:bg-rose-400 transition-all shadow-lg font-bold text-sm"
-                    >
-                      <FileText size={18} /> View Technical Details
-                    </button>
-                  </div>
+        {/* Share Action */}
+        <footer className="flex flex-col items-center justify-center mt-20 px-6">
+          <div className="w-24 h-px bg-slate-100 dark:bg-slate-800 mb-12" />
+          <button 
+            onClick={handleShare}
+            className="group flex items-center gap-3 px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full hover:bg-rose-400 dark:hover:bg-rose-400 hover:text-white dark:hover:text-white transition-all shadow-xl font-black uppercase tracking-widest text-sm"
+          >
+            <Share2 size={20} className="group-hover:rotate-12 transition-transform" />
+            Share Insights
+          </button>
+        </footer>
 
-                  {/* 外層容器增加 dark:ring-slate-700 和陰影調整 */}
-                  <div className="group relative w-full aspect-video md:aspect-[21/9] rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50 dark:bg-slate-800">
-                    <iframe
-                      title="Power BI Dashboard"
-                      className="absolute top-0 left-0 w-full h-full"
-                      src={section.value}
-                      frameBorder="0"
-                      allowFullScreen={true}
-                      // 💡 當 iframe 載入完成時觸發追蹤
-                      onLoad={() => trackPowerBIInteraction(post.title)}
-                    ></iframe>
-                    
-                    {/* 右上角提示 */}
-                    <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                       <span className="flex items-center gap-2 bg-black/50 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm">
-                         <Maximize2 size={16} /> Toggle Full Screen in the Power BI toolbar
-                       </span>
-                    </div>
-                    
-                  </div>
-                </div>
-              );
-            }
-
-
-            if (section.type === 'image') {
-              const imgSrc = section.value.startsWith('http') 
-                ? section.value 
-                : `${import.meta.env.BASE_URL}${section.value.replace(/^\//, '')}`;
-
-              return (
-                <div key={index} className="w-full max-w-5xl px-6 my-12">
-                  <img src={imgSrc} className="w-full rounded-[2.5rem] shadow-xl border border-transparent dark:border-slate-800" alt={section.caption} />
-                  {section.caption && <p className="text-center text-slate-400 mt-6 italic">{section.caption}</p>}
-                </div>
-              );
-            }
-            return null;
-          })}
-        </div>
-
-        {/* Share Button Section */}
-        <div className="flex flex-col items-center justify-center mt-20 px-6">
-           <div className="w-24 h-px bg-slate-100 dark:bg-slate-800 mb-12"></div>
-           <button 
-             onClick={() => {
-              handleShare();
-            }}
-             className="group flex items-center gap-3 px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full hover:bg-rose-400 dark:hover:bg-rose-400 hover:text-white dark:hover:text-white transition-all shadow-xl font-black uppercase tracking-widest text-sm"
-           >
-             <Share2 size={20} className="group-hover:rotate-12 transition-transform" />
-             Share Insights
-           </button>
-        </div>
       </article>
 
-      {/* Discussion Section */}
+      {/* Discussion */}
       <section className="max-w-4xl mx-auto px-6 py-20">
         <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 md:p-12 border border-slate-100 dark:border-slate-800 shadow-xl">
           <h3 className="text-2xl font-bold mb-10 flex items-center gap-4 dark:text-white">
@@ -273,8 +251,9 @@ const handleShare = (postTitle) => {
         </div>
       </section>
 
+      {/* Overlay */}
       {isDrawerOpen && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[90] transition-opacity" onClick={() => setIsDrawerOpen(false)}></div>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[90]" onClick={() => setIsDrawerOpen(false)} />
       )}
     </div>
   );

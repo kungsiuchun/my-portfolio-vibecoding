@@ -8,8 +8,9 @@ const StockDashboard = () => {
   const [tickers, setTickers] = useState([]);
 
   useEffect(() => {
-    // 這裡替換成你的 GitHub Raw URL
-    const CSV_URL = "https://raw.githubusercontent.com/kungsiuchun/stock-trading-python-app/refs/heads/main/dow30.csv";
+    
+  // 在 StockDashboard.jsx 或數據讀取處
+  const CSV_URL = `https://raw.githubusercontent.com/kungsiuchun/stock-trading-python-app/main/tickers.csv?t=${new Date().getTime()}`;
 
     Papa.parse(CSV_URL, {
       download: true,
