@@ -1,20 +1,12 @@
 {
-  "last_updated": "2026-01-12 02:23",
+  "last_updated": "2026-01-13 02:08",
   "top_pages": [
     {
-      "title": "Advanced Data Analytics: Genesis RMAP Media Performance Dashboard | SiuChunKung Portfolio",
-      "users": 2
+      "title": "SiuChun Kung | My Portfolio",
+      "users": 3
     },
     {
       "title": "Applying Morandi Color Schemes in UI Design | SiuChunKung Portfolio",
-      "users": 2
-    },
-    {
-      "title": "Exploring Personal Growth through Data & Code | SiuChunKung Portfolio",
-      "users": 2
-    },
-    {
-      "title": "SiuChun Kung | My Portfolio",
       "users": 2
     },
     {
@@ -22,11 +14,7 @@
       "users": 2
     },
     {
-      "title": "Three Practical Techniques for React Performance Optimization | SiuChunKung Portfolio",
-      "users": 1
-    },
-    {
-      "title": "自動化美股數據管線：Python + GitHub Actions + GA4 可視化 | SiuChunKung Portfolio",
+      "title": "Advanced Data Analytics: Genesis RMAP Media Performance Dashboard | SiuChunKung Portfolio",
       "users": 1
     }
   ]
