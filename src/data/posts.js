@@ -133,6 +133,67 @@ export const posts = [
   },
 
 
+{ 
+    id: 6,
+    title: "進階自動化估值管線：增量更新與多維度歷史 PE 帶狀模型",
+    date: "2026.01.13",
+    category: "Tech",
+    githubUrl: "https://github.com/kungsiuchun/ValuationCalculation",
+    desc: "開發一個結合 FMP 財報數據與 Yahoo Finance 股價的自動化系統，透過 Python 實現 TTM 指標轉換、線性插值對齊及 GitHub Actions 增量數據保護。",
+    sections: [
+      { type: 'image', value: "images/post_6_python_workflow.png", caption: "GitHub Actions Workflow Diagram" },
+      { 
+        type: 'text', 
+        value: `
+          <h3>技術背景與挑戰</h3>
+          <p>在建立美股自動化估值系統時，我們面臨兩個核心挑戰：<b>數據頻率不對稱</b>（季度財報 vs 每日股價）以及 <b>API 數據限制</b>（FMP 免費版僅提供 5 年歷史數據）。本項目透過 Data Engineering 技巧優化了數據流水線，實現了精確的歷史估值建模。</p>
+        ` 
+      },
+      { 
+        type: 'markdown', 
+        value:
+`
+## 核心數據流水線 (Data Pipeline)
+
+### 1. 增量更新策略 (Incremental Update)
+為了解決 FMP API 僅回傳最近 5 年數據的限制，我們實施了 **"Read-Merge-Write"** 策略：
+* **邏輯**：腳本在發起 API 請求前先讀取本地緩存，將新抓取的數據與舊歷史數據按 \`date\` 進行合併去重。
+* **價值**：確保 5 年前的珍貴歷史數據不會被新數據覆蓋，使系統具備「時間累積」能力。
+
+### 2. 數據平滑與對齊 (Data Alignment)
+財報是每三個月發布一次，這會導致估值圖表出現不自然的斷層。我們採用了 **線性插值 (Linear Interpolation)**：
+* **處理**：將季度指標（如 EPS TTM）像「拉拉麵」一樣，平滑地填充到每一天的股價旁。
+* **效果**：估值帶（Valuation Bands）隨日期流暢移動，消除了財報發布日的視覺衝擊。
+
+### 3. 多維度滾動估值模型 (Rolling Bands)
+系統動態合成歷史 PE/PS 曲線，並提供多個時間窗口的參考：
+* **1Y / 3Y / 5Y Rolling**：反映市場在不同週期的估值偏好。
+* **拆股修正 (Split Adjustment)**：透過 \`adj_ratio\` 動態修正歷史指標，確保像 AMZN 這種發生過拆股的股票，其歷史數據與現價量級完全匹配。
+`
+      },
+      { 
+        type: 'markdown', 
+        value:
+`
+## CI/CD 自動化架構
+
+我們利用 **GitHub Actions** 實現了完全無人值守的運維：
+* **環境隔離**：使用 Python 3.11 環境以支援最新的類型標註與 \`yfinance\` 語法。
+* **數據持久化**：Pipeline 執行完畢後，會自動將更新後的 \`fmp_cache\` 與 \`results\` 提交回 GitHub 倉庫。
+* **健壯性檢查**：內置 \`git diff\` 判斷，避免在休市日產生無意義的空白 Commit。
+`
+      },
+      { 
+        type: 'text', 
+        value: `
+          <h3>專案成果</h3>
+          <p>透過這套管線，前端展示不僅僅是靜態的股價圖，而是包含了 5 條動態估值線（±1σ, ±2σ）的專業級分析工具。它能幫助投資者一眼辨別目前股價是處於「近期」還是「長期」的歷史估值窪地。</p>
+        ` 
+      },
+      { type: 'valuation_chart', value: '' },
+    ]
+  },
+
 ];
 
 
