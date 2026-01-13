@@ -143,7 +143,8 @@ const PostDetail = () => {
   
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [activeDoc, setActiveDoc] = useState("");
-  const [showToast, setShowToast] = useState(false);
+  const [toastMsg, setToastMsg] = useState("");
+  const showToast = toastMsg !== "";
 
   const post = posts.find(p => p.id.toString() === id);
 
@@ -152,13 +153,15 @@ const PostDetail = () => {
     if (window.gtag) {
       window.gtag('event', 'view_powerbi', {
         event_category: 'Engagement',
-        event_label: reportTitle || 'Sales Dashboard',
+        event_label: reportTitle || ' Dashboard',
         value: 1
       });
     }
   }, []);
 
   const handleShare = async () => {
+    console.log("Share button clicked"); // Debug 用
+
     if (window.gtag) {
       window.gtag('event', 'share_attempt', { post_title: post.title });
     }
@@ -166,24 +169,45 @@ const PostDetail = () => {
     if (navigator.share) {
       try {
         await navigator.share({ title: post.title, url: window.location.href });
-        window.gtag?.('event', 'share_completed', { post_title: post.title });
+        // Log 分享成功 console.log("Web Share API successful"); 
+        
+        setToastMsg("Link shared successfully!");
+        
+        window.gtag?.('event', 'share_completed', { 
+          post_title: post.title,
+          method: 'web_share' 
+        });
+
       } catch (err) {
-        if (err.name !== 'AbortError') console.error(err);
+        if (err.name !== 'AbortError') {
+          console.error("Share failed:", err);
+        }
       }
     } else {
-      await navigator.clipboard.writeText(window.location.href);
-      setShowToast(true);
-      window.gtag?.('event', 'share_completed', { post_title: post.title, method: 'clipboard' });
+      // 桌面端或不支援 Web Share 的瀏覽器
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        // console.log("Copied to clipboard successfully"); // Log 複製成功
+        
+        setToastMsg("Link copied to clipboard!");
+        
+        window.gtag?.('event', 'share_completed', { 
+          post_title: post.title, 
+          method: 'clipboard' 
+        });
+      } catch (err) {
+        // console.error("Clipboard copy failed:", err);
+      }
     }
   };
 
   // 2. Lifecycle
   useEffect(() => {
-    if (showToast) {
-      const timer = setTimeout(() => setShowToast(false), 3000);
+    if (toastMsg) {
+      const timer = setTimeout(() => setToastMsg(""), 3000);
       return () => clearTimeout(timer);
     }
-  }, [showToast]);
+  }, [toastMsg]);
 
   if (!post) return <div className="text-center py-20 dark:text-white">Post not found</div>;
 
@@ -195,7 +219,7 @@ const PostDetail = () => {
       <div className={`fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] transition-all duration-500 transform ${showToast ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'}`}>
         <div className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-800 dark:border-slate-200">
           <div className="w-2 h-2 rounded-full bg-rose-400 animate-pulse" />
-          <span className="text-sm font-bold">Link copied to clipboard!</span>
+          <span className="text-sm font-bold">{toastMsg}</span>
         </div>
       </div>
 
