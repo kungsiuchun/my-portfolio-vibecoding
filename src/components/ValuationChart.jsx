@@ -119,9 +119,10 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
                         
             <Tooltip 
               cursor={{ stroke: '#334155', strokeWidth: 1 }}
-              contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #36517c', borderRadius: '16px' }}
+              contentStyle={{ color: '#a6b6cc', backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid #36517c', borderRadius: '16px' }}
               itemStyle={{ fontSize: '11px', fontWeight: '600' }}
             />
+
             
             <Legend verticalAlign="top" align="left" iconType="circle" wrapperStyle={{ paddingBottom: '20px', fontSize: '10px', textTransform: 'uppercase' }}/>
 
