@@ -160,7 +160,7 @@ const PostDetail = () => {
   }, []);
 
   const handleShare = async () => {
-    console.log("Share button clicked"); // Debug 用
+    // console.log("Share button clicked"); // Debug 用
 
     if (window.gtag) {
       window.gtag('event', 'share_attempt', { post_title: post.title });
