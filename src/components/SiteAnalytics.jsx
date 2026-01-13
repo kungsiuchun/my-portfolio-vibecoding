@@ -38,7 +38,7 @@ const SiteAnalytics = () => {
           </p>
         </div>
         <div className="text-right">
-          <div className="text-[10px] uppercase tracking-widest text-slate-500">Last Updated</div>
+          <div className="text-[10px] uppercase tracking-widest text-slate-500">Last Updated (UTC)</div>
           <div className="text-sm font-mono text-green-400">{data.last_updated}</div>
         </div>
       </div>

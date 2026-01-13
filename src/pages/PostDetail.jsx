@@ -1,16 +1,29 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Github, ArrowLeft, Maximize2, FileText, X, Share2 } from 'lucide-react';
+import { Github, ArrowLeft, Maximize2, FileText, X, Share2, ChevronDown, BarChart3 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+
 
 // Components
 import CommentSystem from '../components/CommentSystem';
 import SEO from '../components/SEO';
 import StockDashboard from '../components/StockDashboard';
 import { posts } from '../data/posts';
+import ValuationChart from '../components/ValuationChart';
 
 // --- Sub-component for Cleaner Rendering ---
 const PostSection = ({ section, onOpenDoc, onTrackBI, postTitle }) => {
+    // 1. 定義你目前有 JSON 數據的股票列表
+    const availableTickers = [
+      "AAPL", "TSLA", "AMZN", "MSFT", "NVDA", "GOOGL", "META", "NFLX", 
+      "PYPL", "SOFI", "HOOD", "WMT", "GE", "CSCO", "JNJ", "CVX", "PLTR",
+      "UNH",  "TSM", "DIS", "COST", "INTC", "KO", "TGT", "NKE", "BA", 
+      "SHOP", "SBUX", "ADBE"
+  ]
+    
+    // 股票選擇狀態
+    const [selectedTicker, setSelectedTicker] = useState("AAPL");
+
   switch (section.type) {
     case 'text':
       return (
@@ -35,6 +48,49 @@ const PostSection = ({ section, onOpenDoc, onTrackBI, postTitle }) => {
           <StockDashboard />
         </div>
       );
+
+case 'valuation_chart':
+
+      return (
+
+        <div className="w-full max-w-6xl px-6 my-12">
+            {/* 📈 Valuation Chart Section */}
+            <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sky-500 font-bold text-sm uppercase tracking-widest">
+                  <BarChart3 size={18} />
+                  <span>Valuation Research</span>
+                </div>
+                <h2 className="text-4xl font-black text-slate-800 dark:text-white tracking-tighter">
+                  Market Intelligence
+                </h2>
+                <p className="text-slate-500 dark:text-slate-400 font-light max-w-md">
+                  Automated data pipeline: <span className="text-slate-800 dark:text-slate-200 font-medium">FMP API + Pandas</span>.
+                  Visualizing relative valuation bands for long-term edge.
+                </p>
+              </div>
+            
+              {/* 🚀 優化後的 Dropdown Selector */}
+              <div className="relative min-w-[160px]">
+                <label className="block text-[10px] font-bold text-slate-400 uppercase mb-2 ml-1">Symbol Selection</label>
+                <div className="relative group">
+                  <select
+                    value={selectedTicker}
+                    onChange={(e) => setSelectedTicker(e.target.value)}
+                    className="w-full appearance-none bg-white dark:bg-slate-800 text-slate-800 dark:text-white px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 font-bold text-lg shadow-sm hover:border-sky-400 dark:hover:border-sky-500 transition-all cursor-pointer focus:outline-none focus:ring-4 focus:ring-sky-500/10"
+                  >
+              {availableTickers.map((t) => (
+                <option key={t} value={t} className="bg-white dark:bg-slate-900">{t}</option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 group-hover:text-sky-500 pointer-events-none transition-colors" size={24} />
+          </div>
+        </div>
+      </div>
+
+      <ValuationChart ticker={selectedTicker} />
+    </div>
+  );
 
     case 'powerbi':
       return (

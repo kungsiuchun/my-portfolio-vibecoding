@@ -1,6 +1,7 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react'; // 增加一些圖標
 import { Link } from 'react-router-dom';
 import { posts } from '../data/posts';
+import React, { useState } from 'react';
 import FireWriting from '../components/FireWriting';
 import GithubStats from '../components/GithubStats';
 import SiteAnalytics from '../components/SiteAnalytics';
@@ -11,47 +12,37 @@ const Home = () => {
     .slice(0, 2);
 
   return (
-    /* 這裡加上 max-w-6xl 並 mx-auto，確保首頁內容在寬螢幕下依然置中且優雅 */
     <div className="max-w-6xl mx-auto space-y-32 py-12 transition-colors duration-500">
       
       {/* Hero Section */}
       <section className="px-6 text-center">
         <FireWriting text="VIBE" />
         <h1 className="text-5xl md:text-6xl font-extrabold text-slate-800 dark:text-white mb-8 tracking-tight mt-12">
-          {/* Updated to English: "Writing is for better thinking" */}
           Writing to <span className="text-sky-400">Think</span> Better.
         </h1>
         <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed font-light">
-          {/* Updated to English: Description of your digital garden */}
           Welcome to my digital garden. I share insights on React development, UI/UX design, and my journey through the world of code.
         </p>
       </section>
 
-
-  
-      {/* 📊 數據分析師的雙重展示 */}
-        <section className="container mx-auto px-4 pb-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <GithubStats />
-            <SiteAnalytics />
-          </div>
-        </section>
-
+      {/* 📊 數據分析展示 */}
+      <section className="container mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <GithubStats />
+          <SiteAnalytics />
+        </div>
+      </section>
 
 
       {/* Featured Posts Section */}
       <section className="px-6">
         <div className="flex items-center justify-between mb-12">
-          {/* Updated to English: "Featured Posts" */}
           <h2 className="text-3xl font-bold text-slate-800 dark:text-white tracking-tight">Featured Posts</h2>
           <Link to="/blog" className="text-rose-400 hover:text-rose-500 font-semibold flex items-center gap-1 group">
-            {/* Updated to English: "View All" */}
             View All <span className="group-hover:translate-x-1 transition-transform">→</span>
           </Link>
         </div>
 
-
-        {/* 增加卡片間距 Gap 到 12，給予更多呼吸空間 */}
         <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
           {featuredPosts.map(post => (
             <article 
@@ -78,7 +69,6 @@ const Home = () => {
                   to={`/post/${post.id}`}
                   className="text-slate-800 dark:text-slate-200 font-bold inline-flex items-center gap-2 group-hover:gap-4 transition-all"
                 >
-                  {/* Updated to English: "Read More" */}
                   Read More <ArrowRight size={20} className="text-rose-400" />
                 </Link>
               </div>
@@ -87,7 +77,6 @@ const Home = () => {
         </div>
       </section>
       
-      {/* 底部裝飾 */}
       <div className="pb-20"></div>
     </div>
   );

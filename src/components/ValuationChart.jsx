@@ -26,12 +26,13 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
   const avgVal = data.averages?.[model]?.[timeWindow];
 
   return (
-    <div className="w-full bg-slate-900/50 backdrop-blur-md p-6 rounded-3xl border border-slate-800 shadow-2xl">
-      
-{/* Header Section */}
+
+      /* 外層容器：支援 Light/Dark 主題切換 */
+      <div className="w-full bg-white dark:bg-slate-900/50 backdrop-blur-md p-6 md:p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-xl">
+      {/* Header Section */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-6">
         <div>
-          <h2 className="text-2xl font-black text-white tracking-tighter flex items-center gap-2">
+          <h2 className="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-3 tracking-tighter">
             {data.ticker} <span className="text-indigo-500">VALUATION BANDS</span>
           </h2>
           <p className="text-slate-500 text-xs font-medium uppercase tracking-widest mt-1">
@@ -42,7 +43,7 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
         {/* 控制面板：切換模型與週期 */}
         <div className="flex flex-wrap gap-3">
           {/* 週期切換 (1Y, 2Y, 3Y, 5Y) */}
-          <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <div className="flex p-1 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700">
             {['1Y', '2Y', '3Y', '5Y'].map((w) => (
               <button
                 key={w}
@@ -55,7 +56,7 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
           </div>
 
           {/* 模型切換 (PE / FCF) */}
-          <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <div className="flex p-1 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700">
             <button 
               onClick={() => setModel('pe')}
               className={`px-4 py-1.5 rounded-lg text-[10px] font-bold transition-all ${model === 'pe' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-white'}`}
@@ -118,7 +119,7 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
                         
             <Tooltip 
               cursor={{ stroke: '#334155', strokeWidth: 1 }}
-              contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px' }}
+              contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #36517c', borderRadius: '16px' }}
               itemStyle={{ fontSize: '11px', fontWeight: '600' }}
             />
             
@@ -223,7 +224,7 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
             <Line 
               type="monotone" 
               dataKey="price" 
-              stroke="#ffffff" 
+              
               strokeWidth={3} 
               dot={false} 
               name="Market Price" 
@@ -234,11 +235,17 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
       </div>
 
 
-      <div className="mt-6 flex justify-between items-center text-[10px] text-slate-600 font-bold uppercase tracking-widest">
-        <span>Last Updated: {data.last_updated}</span>
-        <span className="bg-slate-800/50 px-3 py-1 rounded-full border border-slate-700">
-          Source: FMP Stable API
-        </span>
+{/* Footer Info */}
+      <div className="mt-10 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          Last Updated: {data.last_updated}
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="bg-slate-50 dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-100 dark:border-slate-700">
+            Source: FMP Stable API
+          </span>
+        </div>
       </div>
 
     </div>
