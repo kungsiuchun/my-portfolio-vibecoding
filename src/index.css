@@ -18,3 +18,28 @@
 html, body {
   overflow-x: clip;
 }
+
+/* 當容器進入全螢幕狀態時的樣式 */
+.valuation-chart-container:fullscreen {
+  background-color: #0f172a !important; /* 強制深色背景 */
+  padding: 2rem;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* 針對 Webkit 內核 (Safari/Chrome) 的全螢幕背景 */
+.valuation-chart-container:-webkit-full-screen {
+  background-color: #0f172a !important;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* 全螢幕時讓圖表區域長高 */
+.valuation-chart-container:fullscreen .chart-wrapper {
+  flex: 1;
+  height: auto !important;
+  min-height: 500px;
+}

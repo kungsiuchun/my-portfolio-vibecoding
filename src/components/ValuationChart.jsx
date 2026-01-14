@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, 
   Legend, ResponsiveContainer, Area
@@ -8,7 +8,8 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [model, setModel] = useState('pe'); // 'pe' 或 'fcf'
-  const [timeWindow, setTimeWindow] = useState('2Y'); // 新增：'1Y', '2Y', '3Y', '5Y'
+  const [timeWindow, setTimeWindow] = useState('2Y'); // '1Y', '2Y', '3Y', '5Y'
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const timestamp = new Date().getTime();
@@ -21,14 +22,25 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
       .catch(err => console.error("Loading error:", err));
   }, [ticker]);
 
+  // 全螢幕切換函數
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  };
+
   if (loading) return <div className="text-indigo-400 p-10 animate-pulse font-mono text-center">📡 Loading Market Intelligence...</div>;
 
   const avgVal = data.averages?.[model]?.[timeWindow];
 
   return (
-
-      /* 外層容器：支援 Light/Dark 主題切換 */
-      <div className="w-full bg-white dark:bg-slate-900/50 backdrop-blur-md p-6 md:p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-xl">
+    /* 外層容器：新增 ref 和 fullscreen 專用 class */
+    <div 
+      ref={containerRef}
+      className="valuation-chart-container w-full bg-white dark:bg-slate-900/50 backdrop-blur-md p-5 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-xl"
+    >
       {/* Header Section */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-6">
         <div>
@@ -40,8 +52,8 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
           </p>
         </div>
 
-        {/* 控制面板：切換模型與週期 */}
-        <div className="flex flex-wrap gap-3">
+        {/* 控制面板 */}
+        <div className="flex flex-wrap items-center gap-3">
           {/* 週期切換 (1Y, 2Y, 3Y, 5Y) */}
           <div className="flex p-1 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700">
             {['1Y', '2Y', '3Y', '5Y'].map((w) => (
@@ -55,35 +67,34 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
             ))}
           </div>
 
-          {/* 模型切換 (PE / FCF) */}
+          {/* 模型切換 (PE / FCF / PS) */}
           <div className="flex p-1 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700">
-            <button 
-              onClick={() => setModel('pe')}
-              className={`px-4 py-1.5 rounded-lg text-[10px] font-bold transition-all ${model === 'pe' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-white'}`}
-            >
-              P/E
-            </button>
-            <button 
-              onClick={() => setModel('fcf')}
-              className={`px-4 py-1.5 rounded-lg text-[10px] font-bold transition-all ${model === 'fcf' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-white'}`}
-            >
-              P/FCF
-            </button>
-            <button 
-              onClick={() => setModel('ps')}
-              className={`px-4 py-1.5 rounded-lg text-[10px] font-bold transition-all ${model === 'ps' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-white'}`}
-            >
-              P/S
-            </button>
+            {['pe', 'fcf', 'ps'].map((m) => (
+              <button 
+                key={m}
+                onClick={() => setModel(m)}
+                className={`px-4 py-1.5 rounded-lg text-[10px] font-bold transition-all uppercase ${model === m ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-white'}`}
+              >
+                {m === 'pe' ? 'P/E' : m === 'fcf' ? 'P/FCF' : 'P/S'}
+              </button>
+            ))}
           </div>
+
+          {/* 全螢幕按鈕 (Mobile Friendly) */}
+          <button 
+            onClick={toggleFullScreen}
+            className="flex items-center justify-center p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-indigo-400 border border-slate-200 dark:border-slate-700 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          </button>
         </div>
       </div>
 
-      <div className="h-[500px] w-full">
-        <ResponsiveContainer width="100%" height="100%">
+      {/* 圖表容器：調整手機端高度並增加防抖 */}
+      <div className="h-[380px] md:h-[500px] w-full chart-wrapper">
+        <ResponsiveContainer width="100%" height="100%" debounce={100}>
           <ComposedChart data={data.data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>
-              {/* 定義雲帶漸變色 */}
               <linearGradient id="bandRed" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#ef4444" stopOpacity={0.15}/>
                 <stop offset="95%" stopColor="#ef4444" stopOpacity={0.05}/>
@@ -113,22 +124,18 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
               fontSize={10}
               axisLine={false}
               tickLine={false}
-              domain={['dataMin - 15', 'dataMax + 15']} 
+              domain={['auto', 'auto']} 
               tickFormatter={(val) => `$${Number(val).toFixed(0)}`}
             />
                         
             <Tooltip 
               cursor={{ stroke: '#334155', strokeWidth: 1 }}
-              contentStyle={{ color: '#a6b6cc', backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid #36517c', borderRadius: '16px' }}
+              contentStyle={{ color: '#a6b6cc', backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid #36517c', borderRadius: '16px', backdropFilter: 'blur(4px)' }}
               itemStyle={{ fontSize: '11px', fontWeight: '600' }}
             />
 
-            
             <Legend verticalAlign="top" align="left" iconType="circle" wrapperStyle={{ paddingBottom: '20px', fontSize: '10px', textTransform: 'uppercase' }}/>
 
-            {/* --- 雲帶背景層 (Area) 使用動態 Path: valuation.[window].[model] --- */}
-
-            {/* 1. 過熱雲帶：限制在 up1 與 up2 之間 */}
             <Area
               type="monotone"
               dataKey={(obj) => [
@@ -142,7 +149,6 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
               legendType="none"
             />
 
-            {/* 2. 核心雲帶：限制在 down1 與 up1 之間 */}
             <Area
               type="monotone"
               dataKey={(obj) => [
@@ -156,7 +162,6 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
               legendType="none"
             />
 
-            {/* 3. 超跌雲帶：限制在 down2 與 down1 之間 */}
             <Area
               type="monotone"
               dataKey={(obj) => [
@@ -170,73 +175,26 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
               legendType="none"
             />
 
-            {/* --- 估值線條層 (Line) --- */}
-            <Line 
-              type="monotone" 
-              dataKey={`valuation.${timeWindow}.${model}.up2`} 
-              stroke="#ef4444" 
-              strokeWidth={1.5}
-              strokeDasharray="5 5" 
-              dot={false} 
-              connectNulls={true}
-              name="Overvalued (+2σ)" 
-            />
-            <Line 
-              type="monotone" 
-              dataKey={`valuation.${timeWindow}.${model}.up1`} 
-              stroke="#f59e0b" 
-              strokeWidth={1}
-              strokeDasharray="3 3" 
-              dot={false} 
-              connectNulls={true}
-              name="+1σ Band" 
-            />
-            <Line 
-              type="monotone" 
-              dataKey={`valuation.${timeWindow}.${model}.mean`} 
-              stroke="#6366f1" 
-              strokeWidth={2.5} 
-              dot={false} 
-              connectNulls={true}
-              name="Fair Value (Mean)" 
-            />
-            <Line 
-              type="monotone" 
-              dataKey={`valuation.${timeWindow}.${model}.down1`} 
-              stroke="#3b82f6" 
-              strokeWidth={1}
-              strokeDasharray="3 3" 
-              dot={false} 
-              connectNulls={true}
-              name="-1σ Band" 
-            />
-            <Line 
-              type="monotone" 
-              dataKey={`valuation.${timeWindow}.${model}.down2`} 
-              stroke="#22c55e" 
-              strokeWidth={1.5}
-              strokeDasharray="5 5" 
-              dot={false} 
-              connectNulls={true}
-              name="Undervalued (-2σ)" 
-            />
+            <Line type="monotone" dataKey={`valuation.${timeWindow}.${model}.up2`} stroke="#ef4444" strokeWidth={1.5} strokeDasharray="5 5" dot={false} connectNulls={true} name="Overvalued (+2σ)" />
+            <Line type="monotone" dataKey={`valuation.${timeWindow}.${model}.up1`} stroke="#f59e0b" strokeWidth={1} strokeDasharray="3 3" dot={false} connectNulls={true} name="+1σ Band" />
+            <Line type="monotone" dataKey={`valuation.${timeWindow}.${model}.mean`} stroke="#6366f1" strokeWidth={2.5} dot={false} connectNulls={true} name="Fair Value (Mean)" />
+            <Line type="monotone" dataKey={`valuation.${timeWindow}.${model}.down1`} stroke="#3b82f6" strokeWidth={1} strokeDasharray="3 3" dot={false} connectNulls={true} name="-1σ Band" />
+            <Line type="monotone" dataKey={`valuation.${timeWindow}.${model}.down2`} stroke="#22c55e" strokeWidth={1.5} strokeDasharray="5 5" dot={false} connectNulls={true} name="Undervalued (-2σ)" />
 
-            {/* 真實價格 (White Glow Effect) */}
             <Line 
               type="monotone" 
               dataKey="price" 
-              
+              stroke="#fff"
               strokeWidth={3} 
               dot={false} 
               name="Market Price" 
-              animationDuration={1500}
+              animationDuration={1000}
             />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
 
-
-{/* Footer Info */}
+      {/* Footer Info */}
       <div className="mt-10 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -248,7 +206,6 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
           </span>
         </div>
       </div>
-
     </div>
   );
 };
