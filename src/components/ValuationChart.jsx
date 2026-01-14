@@ -3,6 +3,7 @@ import {
   ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, 
   Legend, ResponsiveContainer, Area
 } from 'recharts';
+import html2canvas from 'html2canvas'; // 引入套件
 
 const ValuationChart = ({ ticker = "AAPL" }) => {
   const [data, setData] = useState(null);
@@ -28,6 +29,28 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
       containerRef.current?.requestFullscreen?.();
     } else {
       document.exitFullscreen?.();
+    }
+  };
+
+  // --- 新增：分享為圖片功能 ---
+  const shareAsImage = async () => {
+    if (!containerRef.current) return;
+    
+    try {
+      const canvas = await html2canvas(containerRef.current, {
+        backgroundColor: '#0f172a', // 確保截圖背景是深色
+        scale: 2, // 提高解析度
+        logging: false,
+        useCORS: true // 允許跨域圖片（如 FMP logo）
+      });
+      
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = `${ticker}_Valuation_${timeWindow}.png`;
+      link.click();
+    } catch (err) {
+      console.error("Capture failed:", err);
     }
   };
 
@@ -80,13 +103,25 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
             ))}
           </div>
 
-          {/* 全螢幕按鈕 (Mobile Friendly) */}
-          <button 
-            onClick={toggleFullScreen}
-            className="flex items-center justify-center p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-indigo-400 border border-slate-200 dark:border-slate-700 transition-colors"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-          </button>
+          {/* 功能按鈕組 */}
+            <div className="flex gap-2">
+              {/* 截圖按鈕 */}
+              <button 
+                onClick={shareAsImage} 
+                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-emerald-400 border border-slate-200 dark:border-slate-700 transition-colors"
+                title="Share as Image"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </button>
+
+              {/* 全螢幕按鈕 */}
+              <button 
+                onClick={toggleFullScreen} 
+                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-indigo-400 border border-slate-200 dark:border-slate-700 transition-colors"
+              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            </button>
+          </div>
         </div>
       </div>
 
