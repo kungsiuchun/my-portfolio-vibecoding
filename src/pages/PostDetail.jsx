@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Github, ArrowLeft, Maximize2, FileText, X, Share2, ChevronDown, BarChart3 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import React, { Suspense, lazy } from 'react';
 
 
 // Components
@@ -9,7 +10,8 @@ import CommentSystem from '../components/CommentSystem';
 import SEO from '../components/SEO';
 import StockDashboard from '../components/StockDashboard';
 import { posts } from '../data/posts';
-import ValuationChart from '../components/ValuationChart';
+// 將原本的 import ValuationChart from './ValuationChart' 改為：
+const ValuationChart = lazy(() => import('../components/ValuationChart'));
 
 // --- Sub-component for Cleaner Rendering ---
 const PostSection = ({ section, onOpenDoc, onTrackBI, postTitle }) => {
@@ -87,8 +89,9 @@ case 'valuation_chart':
           </div>
         </div>
       </div>
-
-      <ValuationChart ticker={selectedTicker} />
+      <Suspense fallback={<div>Loading Chart...</div>}>
+            <ValuationChart ticker={selectedTicker} />
+      </Suspense>
     </div>
   );
 
