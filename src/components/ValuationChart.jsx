@@ -219,7 +219,6 @@ const ValuationChart = ({ ticker = "AAPL" }) => {
             <Line 
               type="monotone" 
               dataKey="price" 
-              stroke="#fff"
               strokeWidth={3} 
               dot={false} 
               name="Market Price" 
