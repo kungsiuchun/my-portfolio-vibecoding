@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import FireWriting from '../components/FireWriting';
 import GithubStats from '../components/GithubStats';
 import SiteAnalytics from '../components/SiteAnalytics';
+import FinancialReport from '../components/FinancialReport';
 
 const Home = () => {
   const featuredPosts = [...posts]
@@ -33,6 +34,10 @@ const Home = () => {
         </div>
       </section>
 
+      {/* 📊 財務報告展示 */}
+      <section className="container mx-auto px-4">
+        <FinancialReport />
+      </section>
 
       {/* Featured Posts Section */}
       <section className="px-6">

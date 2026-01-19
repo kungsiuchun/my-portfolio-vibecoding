@@ -10,6 +10,7 @@ import CommentSystem from '../components/CommentSystem';
 import SEO from '../components/SEO';
 import StockDashboard from '../components/StockDashboard';
 import { posts } from '../data/posts';
+import FinancialReport from '../components/FinancialReport';
 // 將原本的 import ValuationChart from './ValuationChart' 改為：
 const ValuationChart = lazy(() => import('../components/ValuationChart'));
 
@@ -54,7 +55,14 @@ const PostSection = ({ section, onOpenDoc, onTrackBI, postTitle }) => {
         </div>
       );
 
-case 'valuation_chart':
+    case 'earning_dashboard':
+      return (
+        <div className="w-full max-w-5xl px-6 my-12">
+          <FinancialReport />
+        </div>
+    );
+
+    case 'valuation_chart':
 
       return (
 
