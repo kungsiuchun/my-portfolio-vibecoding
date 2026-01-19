@@ -21,7 +21,7 @@ const PostSection = ({ section, onOpenDoc, onTrackBI, postTitle }) => {
     "COST", "CSCO", "CVX", "DIS", "ETSY", "FDX", "GE", "GOOGL",
     "HOOD", "INTC", "JNJ", "JPM", "KO", "META", "MSFT", "NFLX",
     "NKE", "NVDA", "PFE", "PLTR", "PYPL", "RBLX", "SBUX", "SHOP",
-    "SNAP", "SOFI", "SPY", "T", "TGT", "TSLA", "TSM", "UBER",
+    "SNAP", "SOFI", "T", "TGT", "TSLA", "TSM", "UBER",
     "UNH", "V", "VZ", "WMT", "XOM"
 ]
 
