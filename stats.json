@@ -1,9 +1,9 @@
 {
-  "last_updated": "2026-01-15 02:10",
+  "last_updated": "2026-01-18 02:26",
   "top_pages": [
     {
       "title": "進階自動化估值管線：增量更新與多維度歷史 PE 帶狀模型 | SiuChunKung Portfolio",
-      "users": 9
+      "users": 11
     },
     {
       "title": "SiuChun Kung | My Portfolio",
@@ -11,14 +11,14 @@
     },
     {
       "title": "自動化美股數據管線：Python + GitHub Actions + 數據可視化 | SiuChunKung Portfolio",
-      "users": 4
-    },
-    {
-      "title": "Advanced Data Analytics: Genesis RMAP Media Performance Dashboard | SiuChunKung Portfolio",
-      "users": 1
+      "users": 3
     },
     {
       "title": "Applying Morandi Color Schemes in UI Design | SiuChunKung Portfolio",
+      "users": 2
+    },
+    {
+      "title": "Advanced Data Analytics: Genesis RMAP Media Performance Dashboard | SiuChunKung Portfolio",
       "users": 1
     }
   ]
