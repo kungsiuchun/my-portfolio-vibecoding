@@ -16,7 +16,14 @@ const ValuationChart = lazy(() => import('../components/ValuationChart'));
 // --- Sub-component for Cleaner Rendering ---
 const PostSection = ({ section, onOpenDoc, onTrackBI, postTitle }) => {
     // 1. 定義你目前有 JSON 數據的股票列表
-    const availableTickers = [ "AAPL", "TSLA", "AMZN", "MSFT", "NVDA", "GOOGL", "META", "NFLX", "JPM", "V", "BAC", "PYPL", "DIS", "T", "PFE", "COST", "INTC", "KO", "TGT", "NKE", "BA", "BABA", "XOM", "WMT", "GE", "CSCO", "VZ", "JNJ", "CVX", "PLTR", "SQ", "SHOP", "SBUX", "SOFI", "HOOD", "RBLX", "SNAP", "AMD", "UBER", "FDX", "ABBV", "ETSY", "MRNA", "LMT", "GM", "F", "LCID", "CCL", "DAL", "UAL", "AAL", "TSM", "SONY", "ET", "MRO", "COIN", "RIVN", "RIOT", "CPRX", "NOK", "ROKU", "VIAC", "ATVI", "BIDU", "DOCU", "ZM", "PINS", "TLRY", "WBA", "MGM", "NIO", "C", "GS", "WFC", "ADBE", "PEP", "UNH", "CARR", "HCA", "TWTR", "BILI", "SIRI", "FUBO", "RKT" ]
+    const availableTickers = [
+    "AAPL", "ABBV", "ADBE", "AMD", "AMZN", "BA", "BABA", "BAC",
+    "COST", "CSCO", "CVX", "DIS", "ETSY", "FDX", "GE", "GOOGL",
+    "HOOD", "INTC", "JNJ", "JPM", "KO", "META", "MSFT", "NFLX",
+    "NKE", "NVDA", "PFE", "PLTR", "PYPL", "RBLX", "SBUX", "SHOP",
+    "SNAP", "SOFI", "SPY", "T", "TGT", "TSLA", "TSM", "UBER",
+    "UNH", "V", "VZ", "WMT", "XOM"
+]
 
     
     // 股票選擇狀態
