@@ -1,13 +1,13 @@
 {
-  "last_updated": "2026-01-19 02:23",
+  "last_updated": "2026-01-20 02:12",
   "top_pages": [
     {
       "title": "進階自動化估值管線：增量更新與多維度歷史 PE 帶狀模型 | SiuChunKung Portfolio",
-      "users": 11
+      "users": 12
     },
     {
       "title": "SiuChun Kung | My Portfolio",
-      "users": 8
+      "users": 9
     },
     {
       "title": "自動化美股數據管線：Python + GitHub Actions + 數據可視化 | SiuChunKung Portfolio",
@@ -19,6 +19,10 @@
     },
     {
       "title": "Advanced Data Analytics: Genesis RMAP Media Performance Dashboard | SiuChunKung Portfolio",
+      "users": 1
+    },
+    {
+      "title": "BI 級美股財報分析儀表板：從數據架構到投資決策可視化 | SiuChunKung Portfolio",
       "users": 1
     }
   ]
