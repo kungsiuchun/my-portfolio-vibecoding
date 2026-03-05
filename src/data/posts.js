@@ -290,6 +290,48 @@ export const posts = [
       { type: 'earning_dashboard', value: '' }, // 👈 對應你開發的 React 組件名稱
     ]
   },
+  {
+    id: 8,
+    title: "Tesla Snake Game",
+    date: "2026.03.01",
+    category: "Game",
+    desc: "使用 React 實現的 Tesla 風格貪吃蛇遊戲，收集閃電為電池，即時顯示時速 km/h",
+    sections: [
+      { 
+        type: 'text', 
+        value: `
+          <h3>遊戲介紹</h3>
+          <p>這是一款使用 React 實現的 Tesla 風格貪吃蛇遊戲。蛇頭使用 Tesla 跑車圖標，吃掉閃電可收集電池，電池會跟在蛇後面。</p>
+          
+          <h3>核心功能</h3>
+          <ul>
+            <li><b>Tesla 跑車：</b>蛇頭使用 Tesla 跑車圖標。</li>
+            <li><b>閃電收集：</b>吃掉閃電來收集電池，電池會跟在蛇後面。</li>
+            <li><b>鍵盤控制：</b>使用方向鍵控制蛇的移動方向。</li>
+            <li><b>時速顯示：</b>即時顯示時速（km/h）。</li>
+            <li><b>分數記錄：</b>記錄當前分數和最高分，最高分會保存在本地存儲中。</li>
+            <li><b>暫停功能：</b>按 P 鍵可暫停/恢復遊戲。</li>
+            <li><b>死亡資訊：</b>遊戲結束時顯示死亡原因、位置和方向。</li>
+          </ul>
+          
+          <h3>技術細節</h3>
+          <p>遊戲使用 React Hooks 進行狀態管理，包括 <code>useState</code>、<code>useEffect</code> 和 <code>useRef</code>。遊戲邏輯包括碰撞檢測、食物生成、蛇的移動和分數計算等。</p>
+        ` 
+      },
+      { type: 'snake_game', value: '' },
+      { 
+        type: 'text', 
+        value: `
+          <h3>遊戲規則</h3>
+          <ul>
+            <li>控制蛇吃掉閃電來獲得分數和電池。</li>
+            <li>蛇不能撞到牆壁或自己的身體，否則遊戲結束。</li>
+            <li>遊戲結束時會顯示死亡原因、位置和方向。</li>
+          </ul>
+        ` 
+      },
+    ]
+  },
 ];
 
 

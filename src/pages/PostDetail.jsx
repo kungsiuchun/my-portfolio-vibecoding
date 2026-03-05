@@ -11,6 +11,7 @@ import SEO from '../components/SEO';
 import StockDashboard from '../components/StockDashboard';
 import { posts } from '../data/posts';
 import FinancialReport from '../components/FinancialReport';
+import SnakeGame from '../components/SnakeGame';
 // 將原本的 import ValuationChart from './ValuationChart' 改為：
 const ValuationChart = lazy(() => import('../components/ValuationChart'));
 
@@ -144,6 +145,13 @@ const PostSection = ({ section, onOpenDoc, onTrackBI, postTitle }) => {
         <div className="w-full max-w-5xl px-6 my-12 text-center">
           <img src={imgSrc} alt={section.caption} className="w-full rounded-[2.5rem] shadow-xl border dark:border-slate-800" />
           {section.caption && <p className="text-slate-400 mt-6 italic">{section.caption}</p>}
+        </div>
+      );
+
+    case 'snake_game':
+      return (
+        <div className="w-full px-6 my-12">
+          <SnakeGame />
         </div>
       );
 
