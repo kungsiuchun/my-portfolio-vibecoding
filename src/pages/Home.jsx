@@ -1,84 +1,192 @@
-import { ArrowRight } from 'lucide-react'; // 增加一些圖標
+import React from 'react';
+import { ArrowRight, Mail, Github, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { posts } from '../data/posts';
-import React, { useState } from 'react';
-import FireWriting from '../components/FireWriting';
 import GithubStats from '../components/GithubStats';
 import SiteAnalytics from '../components/SiteAnalytics';
 import FinancialReport from '../components/FinancialReport';
+import { CinematicHero } from '@/components/ui/cinematic-landing-hero';
 
 const Home = () => {
   const featuredPosts = [...posts]
     .sort((a, b) => new Date(b.date.replace(/\./g, '-')) - new Date(a.date.replace(/\./g, '-')))
-    .slice(0, 2);
+    .slice(0, 4);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-32 py-12 transition-colors duration-500">
-      
-      {/* Hero Section */}
-      <section className="px-6 text-center">
-        <FireWriting text="VIBE" />
-        <h1 className="text-5xl md:text-6xl font-extrabold text-slate-800 dark:text-white mb-8 tracking-tight mt-12">
-          Writing to <span className="text-sky-400">Think</span> Better.
-        </h1>
-        <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed font-light">
-          Welcome to my digital garden. I share insights on React development, UI/UX design, and my journey through the world of code.
-        </p>
+    <div className="w-full overflow-x-hidden bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.18),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(244,63,94,0.14),_transparent_26%),linear-gradient(180deg,_#020617_0%,_#0f172a_20%,_#020617_100%)] text-white">
+      <section aria-label="Hero">
+        <CinematicHero
+          brandName="SiuChun"
+          tagline1="Design the system,"
+          tagline2="ship the signal."
+          cardHeading="Executive BI, built for clarity."
+          cardDescription={
+            <>
+              我做 Power BI dashboard、stakeholder reporting 同 data storytelling，重點係清晰、可信，同埋真係幫到決策。
+            </>
+          }
+          metricValue={featuredPosts.length}
+          metricLabel="YoY Growth"
+          ctaHeading="Move to the work."
+          ctaDescription="直接跳去 selected projects、analytics，同 contact 區塊，唔玩假 link。"
+          primaryCtaLabel="Explore Projects"
+          primaryCtaTarget="projects"
+          secondaryCtaLabel="Contact Me"
+          secondaryCtaTarget="contact"
+        />
       </section>
 
-      {/* 📊 數據分析展示 */}
-      <section className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <GithubStats />
-          <SiteAnalytics />
-        </div>
-      </section>
-
-
-      {/* Featured Posts Section */}
-      <section className="px-6">
-        <div className="flex items-center justify-between mb-12">
-          <h2 className="text-3xl font-bold text-slate-800 dark:text-white tracking-tight">Featured Posts</h2>
-          <Link to="/blog" className="text-rose-400 hover:text-rose-500 font-semibold flex items-center gap-1 group">
-            View All <span className="group-hover:translate-x-1 transition-transform">→</span>
-          </Link>
+      <section id="projects" className="mx-auto max-w-7xl px-6 py-24 md:py-32">
+        <div className="max-w-3xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-sky-300/70">
+            Selected work
+          </p>
+          <h2 className="mt-4 text-4xl font-black tracking-tight md:text-6xl">
+            Projects that look sharp and actually do something.
+          </h2>
+          <p className="mt-6 text-base leading-8 text-slate-300 md:text-lg">
+            下面呢堆唔係裝飾卡片，而係我網站入面真正運作緊嘅內容層。首頁要有呼吸感，但唔可以空心。
+          </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
-          {featuredPosts.map(post => (
-            <article 
-              key={post.id} 
-              className="group bg-white dark:bg-slate-900/50 p-8 md:p-12 rounded-[3rem] border border-slate-50 dark:border-slate-800/50 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
+        <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-2">
+          {featuredPosts.map((post) => (
+            <article
+              key={post.id}
+              className="group rounded-[2rem] border border-white/10 bg-white/6 p-7 shadow-2xl shadow-slate-950/30 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 hover:border-sky-400/30"
             >
-              <div className="flex flex-col h-full">
-                <div className="flex items-center gap-4 mb-8">
-                  <span className="px-4 py-1.5 bg-rose-50 dark:bg-rose-500/10 text-rose-400 text-xs font-black uppercase tracking-widest rounded-full">
-                    {post.category}
-                  </span>
-                  <span className="text-slate-400 dark:text-slate-500 text-sm font-medium">{post.date}</span>
-                </div>
-                
-                <h3 className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-white mb-6 group-hover:text-rose-400 transition-colors leading-tight">
-                  <Link to={`/post/${post.id}`}>{post.title}</Link>
-                </h3>
-                
-                <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-10 flex-grow text-lg font-light">
-                  {post.desc}
-                </p>
+              <div className="flex items-center gap-3 text-xs font-black uppercase tracking-[0.35em] text-sky-200/70">
+                <Sparkles size={14} />
+                <span>{post.category}</span>
+              </div>
 
-                <Link 
+              <h3 className="mt-5 text-2xl font-bold tracking-tight text-white md:text-3xl">
+                <Link to={`/post/${post.id}`} className="transition-colors group-hover:text-sky-300">
+                  {post.title}
+                </Link>
+              </h3>
+
+              <p className="mt-5 text-base leading-7 text-slate-300 md:text-lg">
+                {post.desc}
+              </p>
+
+              <div className="mt-8 flex items-center justify-between gap-4">
+                <span className="text-sm font-medium text-slate-400">{post.date}</span>
+                <Link
                   to={`/post/${post.id}`}
-                  className="text-slate-800 dark:text-slate-200 font-bold inline-flex items-center gap-2 group-hover:gap-4 transition-all"
+                  className="inline-flex items-center gap-2 text-sm font-bold text-white transition-all group-hover:gap-3"
                 >
-                  Read More <ArrowRight size={20} className="text-rose-400" />
+                  Read More <ArrowRight size={18} className="text-sky-300" />
                 </Link>
               </div>
             </article>
           ))}
         </div>
       </section>
-      
-      <div className="pb-20"></div>
+
+      <section id="insights" className="mx-auto max-w-7xl px-6 pb-24 md:pb-32">
+        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="rounded-[2rem] border border-white/10 bg-slate-950/70 p-6 shadow-2xl shadow-slate-950/30 backdrop-blur-xl md:p-8">
+            <div className="mb-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-300/70">
+                Live signals
+              </p>
+              <h2 className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
+                Data blocks that stay useful after the novelty fades.
+              </h2>
+            </div>
+            <GithubStats />
+          </div>
+
+          <div className="rounded-[2rem] border border-white/10 bg-slate-950/70 p-6 shadow-2xl shadow-slate-950/30 backdrop-blur-xl md:p-8">
+            <div className="mb-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-fuchsia-300/70">
+                Site behavior
+              </p>
+              <h2 className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
+                What visitors actually do on the site.
+              </h2>
+            </div>
+            <SiteAnalytics />
+          </div>
+        </div>
+      </section>
+
+      <section id="report" className="mx-auto max-w-7xl px-6 pb-24 md:pb-32">
+        <div className="rounded-[2.25rem] border border-white/10 bg-gradient-to-br from-white/8 to-white/4 p-6 shadow-2xl shadow-slate-950/40 backdrop-blur-xl md:p-8">
+          <div className="mb-8 max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-300/70">
+              Spotlight
+            </p>
+            <h2 className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
+              一張報表頁，唔應該只係圖表堆砌。
+            </h2>
+            <p className="mt-4 text-base leading-8 text-slate-300 md:text-lg">
+              這裡保留原本的 FinancialReport，作為 portfolio 裡面最重的展示件。重就重，但要有價值。
+            </p>
+          </div>
+          <FinancialReport />
+        </div>
+      </section>
+
+      <section id="contact" className="mx-auto max-w-7xl px-6 pb-24 md:pb-32">
+        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="rounded-[2rem] border border-white/10 bg-white/6 p-7 shadow-2xl shadow-slate-950/30 backdrop-blur-xl md:p-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-sky-300/70">
+              Contact
+            </p>
+            <h2 className="mt-4 text-3xl font-black tracking-tight md:text-5xl">
+              想合作，就直接搵我。
+            </h2>
+            <p className="mt-5 max-w-2xl text-base leading-8 text-slate-300 md:text-lg">
+              呢個版面唔會扮神秘。你有 project、產品頁、數據 dashboard 或 portfolio redesign，直接畀一條路你走到尾。
+            </p>
+          </div>
+
+          <div className="grid gap-4">
+            <a
+              href="https://github.com/"
+              className="flex items-center justify-between rounded-[1.5rem] border border-white/10 bg-slate-950/70 px-6 py-5 text-white shadow-lg shadow-slate-950/25 transition-transform hover:-translate-y-0.5"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <div className="flex items-center gap-4">
+                <Github size={22} className="text-sky-300" />
+                <div>
+                  <p className="text-sm font-bold uppercase tracking-[0.3em] text-slate-400">GitHub</p>
+                  <p className="text-lg font-semibold">Code and projects</p>
+                </div>
+              </div>
+              <ArrowRight size={18} className="text-slate-400" />
+            </a>
+
+            <a
+              href="mailto:hello@example.com"
+              className="flex items-center justify-between rounded-[1.5rem] border border-white/10 bg-slate-950/70 px-6 py-5 text-white shadow-lg shadow-slate-950/25 transition-transform hover:-translate-y-0.5"
+            >
+              <div className="flex items-center gap-4">
+                <Mail size={22} className="text-rose-300" />
+                <div>
+                  <p className="text-sm font-bold uppercase tracking-[0.3em] text-slate-400">Email</p>
+                  <p className="text-lg font-semibold">hello@example.com</p>
+                </div>
+              </div>
+              <ArrowRight size={18} className="text-slate-400" />
+            </a>
+
+            <Link
+              to="/about"
+              className="flex items-center justify-between rounded-[1.5rem] border border-white/10 bg-slate-950/70 px-6 py-5 text-white shadow-lg shadow-slate-950/25 transition-transform hover:-translate-y-0.5"
+            >
+              <div>
+                <p className="text-sm font-bold uppercase tracking-[0.3em] text-slate-400">About</p>
+                <p className="text-lg font-semibold">Background, process, and approach</p>
+              </div>
+              <ArrowRight size={18} className="text-slate-400" />
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
