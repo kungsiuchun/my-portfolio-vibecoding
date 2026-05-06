@@ -42,3 +42,5 @@ desktop.ini
 coverage/
 *.lcov
 test-results/
+vite-dev.out.log
+vite-dev.err.log
