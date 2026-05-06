@@ -1,11 +1,24 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/my-portfolio-vibecoding/', // 部署到 GitHub Pages 時，這裡填寫你的倉庫名稱
-build: {
+  base: '/my-portfolio-vibecoding/',
+  server: {
+    host: '0.0.0.0',
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+  build: {
     rollupOptions: {
       output: {
         manualChunks: {
@@ -16,7 +29,6 @@ build: {
         },
       },
     },
-    // 如果你覺得 500kb 限制太嚴格，可以稍微調高到 800
-    chunkSizeWarningLimit: 800, 
+    chunkSizeWarningLimit: 800,
   },
 })

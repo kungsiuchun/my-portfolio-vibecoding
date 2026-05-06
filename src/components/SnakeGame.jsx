@@ -5,7 +5,7 @@ const GRID_WIDTH = 32;
 const GRID_HEIGHT = 18;
 const INITIAL_SNAKE = [{ x: 16, y: 9 }];
 
-const INITIAL_SPEED_MS = INITIAL_SPEED_MS;
+const INITIAL_SPEED_MS = 150;
 const MIN_SPEED_MS = 60;
 const SPEEDUP_DELAY_MS = 10000;
 const SPEED_MULTIPLIER = 0.92;
